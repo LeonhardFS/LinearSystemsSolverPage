@@ -1,0 +1,87 @@
+\documentclass[12pt, a4paper, titlepage]{book}
+\usepackage{etex}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{polynom}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{plotmarks}
+\usepackage[left=2cm,right=2cm,top=4cm,bottom=3cm]{geometry}
+\usepackage[all]{xy}
+
+\begin{document}
+
+%\begin{equation*}
+%\left(
+%\vcenter{
+%\begin{xy}
+%\xymatrix {
+%\bullet \ar@(ur,ul)[rr]|f&&B \\
+%\bullet & 1
+%}
+%\end{xy}}
+%\right)
+%\end{equation*}
+\subsubsection*{jdsg}
+\begin{xy}
+\xymatrix @R=1pc {
+ 1,1 & 1,2 & 1,3 & 1,4 & 1,5 \\
+ 2,1 & 2,2 & 2,3 & 2,4 & 2,5
+ \save "1,2"."2,4"*\frm{(}*\frm{)}
+  \ar"1,1" \ar"2,1" \ar"1,5" \ar"2,5"
+ \restore \frm{)}
+ }
+\end{xy}
+\subsubsection*{jdsg2}
+
+\begin{xy}
+\xymatrix @R=1pc @C=0.5pc{
+ 1,1 & 1,2 & 1,3 & 1,4 \ar `/4pt[r] `[rd] [d]  & & \\
+ 2,1 & 2,2 & 2,3 & 2,4 & \;\;\;\;\;\;\quad\quad\vert- 3 \cdot \mathrm{II}
+ \save "1,1"."2,4"*\frm{(}*\frm{)}
+ \restore \frm{)}
+}
+\end{xy}
+
+
+\subsubsection*{jdsg25}
+\begin{xy}
+\xymatrix @W=3pc @H=1pc @R=0pc {
+{\bullet}
+  \save*{}
+    \ar ‘
+    `r[dd]+/r3pc/ `[dd] [dd]
+  \restore \\
+{\bullet}
+   \\
+1
+}
+\end{xy}
+
+\subsubsection*{Matrix}
+\begin{xy}
+\setbox0=\hbox{%
+     \xy\drop[OrangeRed][=A]{}\endxy}
+\xymatrix @R=1pc @C=0.5pc{
+ \textcolor{blue}{1} & 2 & 3 & 1 \ar `/4pt[r] `[rd]^{- 8 \cdot \mathrm{I}} [d]  & & \\
+ 4 & -3 & -9 & 8 & \quad
+ \save "1,1"."2,4"*\frm{(}*\frm{)}
+ \restore \frm{)}
+}
+\end{xy}
+\subsubsection*{Bigger Matrix}
+\begin{xy}
+\xymatrix @R=1pc @C=0.5pc{
+ \textbf{1} & 2 & 3 & 1 \ar `/4pt[r] `[rdd]^{- 4 \cdot \mathrm{I}} [dd]  & & \\
+ 5 & 1 & 8 & 8 & \quad \\
+ \textbf{4} & -3 & -9 & 8 & \quad
+ \save "1,1"."3,4"*\frm{(}*\frm{)}
+ \restore \frm{)}
+}
+\end{xy}
+\end{document}
