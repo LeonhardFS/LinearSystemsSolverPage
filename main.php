@@ -34,7 +34,7 @@ ini_set('display_errors', 1);
 <body>
 <h1>Gleichungssystem $Ax=b$</h1>
 <h2>Schritt 1: Gleichung aufstellen</h2>
-Eine tolle Matheformel $Ax=b$ wird hier gelöst. $\frac{x+y}2$ PHP class test:
+Eine tolle Matheformel $Ax=b$ wird hier gelöst. Prima oder? $\frac{x+y}2$ PHP class test:
 <p><?php
 $r1 = new RationalNumber();
 $r2 = new RationalNumber(3, 5);
