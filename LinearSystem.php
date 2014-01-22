@@ -116,6 +116,14 @@ class LinearSystem {
 		$this->A = array(array());
 		$this->R = array(array());
 		$this->b = array();
+
+
+        // matrix arrays are addressed in the following way
+        // A[col][row]
+        // ie for A = 1 2 3
+        //            4 5 6
+        //            7 8 9
+        // A[2][1] = 6 ! (note indices start with 0!)
 		
 		// used to indicate progress of algorithm
 		$this->step = 0;
@@ -133,8 +141,8 @@ class LinearSystem {
 		// set b to R
 		for($i = 0; $i < $this->n; $i++)
 			for($j = 0; $j < $this->n; $j++) {
-				if($i == 0)$this->R[$i][$j] = clone $this->b[$j];
-				else $this->R[$i][$j] = new RationalNumber(0);
+				if($i == 0)$this->R[$i][$j] = clone $this->b[$j]; // R's first column equals b
+				else $this->R[$i][$j] = new RationalNumber(0);    // set other cols to zero
 			}
 	}
 	
@@ -146,7 +154,7 @@ class LinearSystem {
 			// go through rows
 			for($r = $c + 1; $r < $this->n; $r++) {
 				// eliminate element
-				$pivot = clone $this->A[$c][$c];
+				//$pivot = clone $this->A[$c][$c];
 				
 				$coefficient = rdivide($this->A[$c][$c + 1], $this->A[$c][$c]);
 				
@@ -180,13 +188,16 @@ class LinearSystem {
 	}
 	
 	// row b holds result
-	private function gaussRows($a, $b, $c) {
+    // row b = coeff * row b - row a
+    // coeff is determined by c
+	private function gaussRows($b, $a, $c) {
 		// c is column
 		$coefficient = rdivide($this->A[$c][$b], $this->A[$c][$a]);
 		
 		// small optimization, when coefficient is 1, reduce immediately
 		if($coefficient->numerator == $coefficient->denominator)$coefficient->reduce();
-		
+
+        // go through cols
 		for($k = 0; $k < $this->n; $k++) {
 			$this->R[$k][$b] = rminus($this->R[$k][$b], rtimes($coefficient, $this->R[$k][$a]));
 		}
@@ -198,9 +209,9 @@ class LinearSystem {
 		// return descriptional string for output
 		$str = "";
 		if($coefficient->numerator == $coefficient->denominator) // if 1, we do not have to display the obvious coefficient!
-			$str .= "\\text{".toRoman($b + 1)."} = \\text{".toRoman($b + 1)."} - \\text{".toRoman($a)."}";
+			$str .= "\\text{".toRoman($b + 1)."} = \\text{".toRoman($b + 1)."} - \\text{".toRoman($a + 1)."}";
 		else
-			$str .= "\\text{".toRoman($b + 1)."} = ".$coefficient." \\cdot \\text{".toRoman($b + 1)."} - \\text{".toRoman($a)."}";
+			$str .= "\\text{".toRoman($b + 1)."} = ".$coefficient." \\cdot \\text{".toRoman($b + 1)."} - \\text{".toRoman($a + 1)."}";
 			
 		return $str;
 	}
@@ -258,11 +269,11 @@ class LinearSystem {
 				else {
 					//substract rows
 					$str = "rechne ";//.toRoman($this->r + 1)." = ".toRoman($this->c + 1)." - ".toRoman($this->r + 1);
-					$tmp = $this->gaussRows($this->c, $this->r, $this->c);
+					$tmp = $this->gaussRows($this->r + 1, $this->c, $this->c);
 					$str.="$".$tmp."$";
 				}
 				
-			// small optimization for better readability: If numerator if 0, reduce immediately!
+			// small optimization for better readability: If numerator equals 0, reduce immediately!
 			for($i = 0; $i < $this->n; $i++) {
 				if($this->A[$this->c][$i]->numerator == 0)$this->A[$this->c][$i]->reduce();
 			}
@@ -272,7 +283,7 @@ class LinearSystem {
 			//already finished?
 			if($this->r >= $this->n - 1) {
 				$this->c++;
-				$this->r = $this->c + 1;
+				$this->r = $this->c;
 				//$str .= "new column c: ".$this->c." r: ".$this->r;
 			}
 
@@ -311,15 +322,18 @@ class LinearSystem {
 					if($this->A[$this->r][$this->c]->numerator == $this->A[$this->r][$this->c]->denominator)
 					$str = "nichts zu tun, nächste Spalte";
 					else
-					$str = "rechne $\\text{".toRoman($this->c + 1). "} = \\text{".toRoman($this->c + 1)."}  : ".$this->A[$this->r][$this->c]."$";
+					$str = "kuerzen, rechne $\\text{".toRoman($this->c + 1). "} = \\text{".toRoman($this->c + 1)."}  : ".$this->A[$this->r][$this->c]."$";
 					
 					// go through R
 					for($i = 0; $i < $this->n - 1; $i++) {
 						$this->R[$i][$this->c] = rdivide($this->R[$i][$this->r], $this->A[$this->c][$this->r]);
+
+                        //reduce
+                        $this->R[$i][$this->c]->reduce();
 					}
 					// set to one(no complicated calculations)
 					$this->A[$this->r][$this->c] = new RationalNumber(1);
-				}/*
+				}
 				else {
 					// text output, for 1 * something shorten! 0 * something has also to be dealt with!
 					// ATTENTION!
@@ -330,7 +344,8 @@ class LinearSystem {
 					
 					// go through R
 					for($i = 0; $i < $this->n - 1; $i++) {
-						$this->R[$i][$this->c] = rminus($this->R[$i][$this->c], rtimes($this->A[$this->c][$this->r], $this->R[$i][$this->r]));
+                        $str .= "<br>Hier ".$this->R[$i][$this->c]." -=".$this->A[$this->r][$this->c]." * ".$this->R[$i][$this->r];
+						$this->R[$i][$this->c] = rminus($this->R[$i][$this->c], rtimes($this->A[$this->r][$this->c], $this->R[$i][$this->r]));
 					}
 					// set to zero(no complicated calculations)
 					$this->A[$this->r][$this->c] = new RationalNumber(0);

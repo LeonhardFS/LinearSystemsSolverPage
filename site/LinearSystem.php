@@ -133,7 +133,7 @@ class LinearSystem {
 		// set b to R
 		for($i = 0; $i < $this->n; $i++)
 			for($j = 0; $j < $this->n; $j++) {
-				if($i == 0)$this->R[$i][$j] = clone $this->b[$j];
+				if($i == 0)$this->R[$i][$j] = clone $this->b[$i];
 				else $this->R[$i][$j] = new RationalNumber(0);
 			}
 	}
@@ -146,7 +146,7 @@ class LinearSystem {
 			// go through rows
 			for($r = $c + 1; $r < $this->n; $r++) {
 				// eliminate element
-				$pivot = clone $this->A[$c][$c];
+				//$pivot = clone $this->A[$c][$c];
 				
 				$coefficient = rdivide($this->A[$c][$c + 1], $this->A[$c][$c]);
 				

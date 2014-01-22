@@ -34,6 +34,7 @@ ini_set('display_errors', 1);
 <body>
 <h1>Gleichungssystem $Ax=b$</h1>
 <h2>Schritt 1: Gleichung aufstellen</h2>
+toll
 Eine tolle Matheformel $Ax=b$ wird hier gelöst. Prima oder? $\frac{x+y}2$ PHP class test:
 <p><?php
 $r1 = new RationalNumber();
@@ -69,20 +70,29 @@ $b = transformVector($A, $x, $n);
 
 // Attention !!! Test Zero matrices!
 // test purposes
-//$A[0][0] = new RationalNumber(0);
+
+// Test matrix: 1 2 3  *  1  =  4
+//              0 1 2  *  0  =  2
+//              0 1 1  *  1  =  1
+$A[0][0] = new RationalNumber(1);  // first column
 $A[0][1] = new RationalNumber(0);
 $A[0][2] = new RationalNumber(0);
-/*
+
 // second column zero
-$A[1][0] = new RationalNumber(0);
-$A[1][1] = new RationalNumber(0);
-$A[1][2] = new RationalNumber(0);
+$A[1][0] = new RationalNumber(2); // second column
+$A[1][1] = new RationalNumber(1);
+$A[1][2] = new RationalNumber(1);
 
 // third column zero
-$A[2][0] = new RationalNumber(0);
-$A[2][1] = new RationalNumber(0);
-$A[2][2] = new RationalNumber(0);
-*/
+$A[2][0] = new RationalNumber(3); // third column
+$A[2][1] = new RationalNumber(2);
+$A[2][2] = new RationalNumber(1);
+
+// b
+$b[0] = new RationalNumber(4);
+$b[1] = new RationalNumber(2);
+$b[2] = new RationalNumber(1);
+
 
 $LS = new LinearSystem($n);
 $LS->A = $A;
