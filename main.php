@@ -167,11 +167,11 @@ echo "</div>";
 	echo "</td></tr>";
 	
 	
-	// secruing
-	if($i > 10)break;
+	// securing
+	if($i > 15)break;
 }
 
-  ?>
+ ?>
 </table>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
