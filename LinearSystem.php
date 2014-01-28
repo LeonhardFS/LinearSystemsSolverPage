@@ -101,9 +101,11 @@ class LinearSystem {
 	private $c;
 	private $r;
 	private $finished;
-	private $n; // A is n by n matrix, b n-vector
-	public $R; // result matrix
-	private $lCurIndex; // current Index for free parameter at R Matrix
+	private $n;             // A is n by n matrix, b n-vector
+	public $R;              // result matrix
+	private $lCurIndex;     // current Index for free parameter at R Matrix
+    private $varNames;      // string array, to name variables which are introduced if rk A < n!
+    private $maxVarNames;   // number of var names
 
 	// constants for modes
 	private $mode;
@@ -131,6 +133,15 @@ class LinearSystem {
 		$this->r = 1;
 		$this->lCurIndex = 1;
 		$this->finished = false;
+
+        // init var names
+        $this->varNames[0] = "t";
+        $this->varNames[1] = "s";
+        $this->varNames[2] = "r";
+        $this->varNames[3] = "u";
+        $this->varNames[4] = "v";
+        $this->varNames[5] = "w";
+        $this->maxVarNames = 6;
 
 		// set mode to first
 		$this->mode = LinearSystem::MODE_FIRST;
@@ -304,7 +315,21 @@ class LinearSystem {
 
 		// is element A_cc 0?
 		if($this->A[$this->c][$this->c]->numerator == 0) {
-			$str="error not yet implemented";
+
+            // now introduce new variable and set entry in matrix A to 0
+            // don't forget to set in the next zero column corresponding line to 1!
+            $this->A[$this->c][$this->c] = new RationalNumber(1);
+
+            // set R
+            $this->R[$this->lCurIndex][$this->c] = new RationalNumber(1);
+
+            if($this->lCurIndex - 1 < $this->maxVarNames)
+                $str = "Nullzeile, führe neue Variable ".$this->varNames[$this->lCurIndex - 1]." ein";
+            else $str ="error";
+
+            $this->lCurIndex++;
+
+			//$str="error not yet implemented";
 		}
 		else {
 			/*if($this->c == $this->n - 1) {
@@ -321,10 +346,10 @@ class LinearSystem {
 				if($this->r == $this->c) {
 					if($this->A[$this->r][$this->c]->numerator == $this->A[$this->r][$this->c]->denominator)
                         // finished?
-                        if($this->c == 1)
+                        if($this->c == 0)
                             $str = "Ergebnis aus erweiterter Koeffizientenmatrix ablesen";
                         else
-					        $str = "nichts zu tun, nächste Spalte";
+					        $str = "nichts zu tun, nächste Zeile";
 					else
 					$str = "kuerzen, rechne $\\text{".toRoman($this->c + 1). "} = \\text{".toRoman($this->c + 1)."}  : ".$this->A[$this->r][$this->c]."$";
 
@@ -378,6 +403,29 @@ class LinearSystem {
 		return $str;
 	}
 
+}
+
+// prints out tex code for the extended matrix
+public function getFormattedTexCode()
+{
+    $str = "";
+    $str .="\\left( \\begin{array}{";
+    for($i = 0; $i < $n; $i++)$str .="c";
+    $str .= "|c}\n";
+
+    for($i = 0; $i < $n; $i++) {
+        for($j = 0; $j < $n; $j++) {
+            $str .= $this->A[$j][$i];
+            $str .= " & ";
+            if($j == $n - 1) {
+                $str .= $this->R[0][$i];
+                if($i <> $n - 1)$str .= " \\\\\n";
+            }
+        }
+    }
+
+    $str .= "\\end{array} \\right)";
+    return $str;
 }
 
 ?>
