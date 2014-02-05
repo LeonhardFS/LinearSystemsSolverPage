@@ -100,6 +100,12 @@ class RationalNumber {
 	public function __toString() {
 		return $this->totex();
 	}
+
+    // is rational number negative?
+    public function isNegative() {
+        // negative <=> (numerator > 0 && denominator < 0) || (numerator < 0 && denominator > 0)
+        return ($this->numerator > 0 && $this->denominator <0) || ($this->numerator < 0 && $this->denominator > 0);
+    }
 }
 
 // direct operator functions

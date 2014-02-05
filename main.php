@@ -3,8 +3,8 @@ include_once('LinearSystem.php');
 include_once('RationalNumber.php');
 include_once('math.php');
 
-//error_reporting(E_ALL);
-//ini_set('display_errors', 1);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 ?>
 
 <!DOCTYPE html>
@@ -106,7 +106,7 @@ Eine tolle Matheformel $Ax=b$ wird hier gelöst. Prima oder? $\frac{x+y}2$ PHP c
     // <-> solution: 0        1
     //               2 + R * -2
     //               0        1
-    /*$A[0][0] = new RationalNumber(1);  // first column
+    $A[0][0] = new RationalNumber(1);  // first column
     $A[0][1] = new RationalNumber(0);
     $A[0][2] = new RationalNumber(0);
 
@@ -124,7 +124,7 @@ Eine tolle Matheformel $Ax=b$ wird hier gelöst. Prima oder? $\frac{x+y}2$ PHP c
     $b[0] = new RationalNumber(4);
     $b[1] = new RationalNumber(2);
     $b[2] = new RationalNumber(2);
-*/
+
 
 
     $LS = new LinearSystem($n);

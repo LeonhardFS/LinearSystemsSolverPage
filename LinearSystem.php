@@ -408,16 +408,31 @@ class LinearSystem {
     {
         $str = "";
         $str .="\\left( \\begin{array}{";
-        for($i = 0; $i < $n; $i++)$str .="c";
+        for($i = 0; $i < $this->n; $i++)$str .="c";
         $str .= "|c}\n";
 
-        for($i = 0; $i < $n; $i++) {
-            for($j = 0; $j < $n; $j++) {
+        for($i = 0; $i < $this->n; $i++) {
+            for($j = 0; $j < $this->n; $j++) {
                 $str .= $this->A[$j][$i];
                 $str .= " & ";
-                if($j == $n - 1) {
+                if($j == $this->n - 1) {
+
+                    if(!(requals($this->R[0][$i], new RationalNumber(0)) && $this->lCurIndex > 1)) // if zero and there exists one var no out
                     $str .= $this->R[0][$i];
-                    if($i <> $n - 1)$str .= " \\\\\n";
+
+                    // go through all vars introduced for zero rows
+                    for($k = 1; $k < $this->lCurIndex; $k++) {
+                        if($this->R[$k][$i]->numerator <> 0) // numerator != 0
+                            if($this->R[$k][$i]->isNegative()) // negative? no + sign necessary
+                                $str .= $this->R[$k][$i].$this->varNames[$k - 1];
+                            else
+                                if(requals($this->R[$k][$i], new RationalNumber(1))) // if one, no coefficient needed
+                                    $str .= $this->varNames[$k - 1];
+                                else
+                                    $str .= "+".$this->R[$k][$i].$this->varNames[$k - 1];
+                    }
+
+                    if($i <> $this->n - 1)$str .= " \\\\\n";
                 }
             }
         }
