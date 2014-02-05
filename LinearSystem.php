@@ -155,6 +155,11 @@ class LinearSystem {
 				if($i == 0)$this->R[$i][$j] = clone $this->b[$j]; // R's first column equals b
 				else $this->R[$i][$j] = new RationalNumber(0);    // set other cols to zero
 			}
+
+        // R has dimension n+1 cols and n columns
+        for($j = 0; $j < $this->n; $j++) {
+            $this->R[$this->n][$j] = new RationalNumber(0);
+        }
 	}
 
 	function solveWithGauss() {
@@ -421,7 +426,7 @@ class LinearSystem {
                     $str .= $this->R[0][$i];
 
                     // go through all vars introduced for zero rows
-                    for($k = 1; $k < $this->lCurIndex; $k++) {
+                    for($k = 1; $k < $this->n + 1; $k++) {
                         if($this->R[$k][$i]->numerator <> 0) // numerator != 0
                             if($this->R[$k][$i]->isNegative()) // negative? no + sign necessary
                                 $str .= $this->R[$k][$i].$this->varNames[$k - 1];

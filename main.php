@@ -125,6 +125,30 @@ Eine tolle Matheformel $Ax=b$ wird hier gelöst. Prima oder? $\frac{x+y}2$ PHP c
     $b[1] = new RationalNumber(2);
     $b[2] = new RationalNumber(2);
 
+    // 3rd test case, solution is R^3
+    // Test matrix: 0 0 0 * (t)    = 0
+    //              0 0 0 * (s)    = 0
+    //              0 0 0 * (r)    = 0
+
+    // <-> solution: R^3
+    $A[0][0] = new RationalNumber(0);  // first column
+    $A[0][1] = new RationalNumber(0);
+    $A[0][2] = new RationalNumber(0);
+
+    // second column zero
+    $A[1][0] = new RationalNumber(0); // second column
+    $A[1][1] = new RationalNumber(0);
+    $A[1][2] = new RationalNumber(0);
+
+    // third column zero
+    $A[2][0] = new RationalNumber(0); // third column
+    $A[2][1] = new RationalNumber(0);
+    $A[2][2] = new RationalNumber(0);
+
+    // b
+    $b[0] = new RationalNumber(0);
+    $b[1] = new RationalNumber(0);
+    $b[2] = new RationalNumber(0);
 
 
     $LS = new LinearSystem($n);
