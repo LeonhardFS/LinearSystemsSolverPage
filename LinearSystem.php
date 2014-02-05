@@ -403,29 +403,30 @@ class LinearSystem {
 		return $str;
 	}
 
-}
+    // prints out tex code for the extended matrix
+    public function getFormattedTexCode()
+    {
+        $str = "";
+        $str .="\\left( \\begin{array}{";
+        for($i = 0; $i < $n; $i++)$str .="c";
+        $str .= "|c}\n";
 
-// prints out tex code for the extended matrix
-public function getFormattedTexCode()
-{
-    $str = "";
-    $str .="\\left( \\begin{array}{";
-    for($i = 0; $i < $n; $i++)$str .="c";
-    $str .= "|c}\n";
-
-    for($i = 0; $i < $n; $i++) {
-        for($j = 0; $j < $n; $j++) {
-            $str .= $this->A[$j][$i];
-            $str .= " & ";
-            if($j == $n - 1) {
-                $str .= $this->R[0][$i];
-                if($i <> $n - 1)$str .= " \\\\\n";
+        for($i = 0; $i < $n; $i++) {
+            for($j = 0; $j < $n; $j++) {
+                $str .= $this->A[$j][$i];
+                $str .= " & ";
+                if($j == $n - 1) {
+                    $str .= $this->R[0][$i];
+                    if($i <> $n - 1)$str .= " \\\\\n";
+                }
             }
         }
+
+        $str .= "\\end{array} \\right)";
+        return $str;
     }
 
-    $str .= "\\end{array} \\right)";
-    return $str;
+// end class
 }
 
 ?>
