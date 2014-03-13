@@ -422,9 +422,6 @@ class LinearSystem {
                 $str .= " & ";
                 if($j == $this->n - 1) {
 
-                    if(!(requals($this->R[0][$i], new RationalNumber(0)) && $this->lCurIndex > 1)) // if zero and there exists one var no out
-                    $str .= $this->R[0][$i];
-
                     // go through all vars introduced for zero rows
                     for($k = 1; $k < $this->n + 1; $k++) {
                         if($this->R[$k][$i]->numerator <> 0) // numerator != 0
@@ -436,6 +433,18 @@ class LinearSystem {
                                 else
                                     $str .= "+".$this->R[$k][$i].$this->varNames[$k - 1];
                     }
+
+                    // check special case, iff all entries of R equal zero
+                    $allzero = true;
+                    for($k = 1; $k < $this->n + 1; $k++) {
+                        if(!requals($this->R[$k][$i], new RationalNumber(0))) {
+                            $allzero = false;
+                            break;
+                        }
+                    }
+
+                    // if all entries are zero, out a zero for a cleaner look
+                    if($allzero)$str .= new RationalNumber(0);
 
                     if($i <> $this->n - 1)$str .= " \\\\\n";
                 }
