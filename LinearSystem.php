@@ -455,6 +455,53 @@ class LinearSystem {
         return $str;
     }
 
+    // returns a latex formatted string describing the affine vector space of the solution
+    public function getAffineSpaceTexString() {
+        $str = "";
+
+            // go through solution array R
+            for($col = 0; $col < $this->n + 1; $col++) {
+
+                // check if col is zero, iff not add to output
+                $columnequalszero = true;
+                for($row = 0; $row < $this->n; $row++) {
+                    if(!requals($this->R[$col][$row], new RationalNumber(0)))$columnequalszero = false;
+                }
+
+                // only add vector to string iff != 0
+                if(!$columnequalszero) {
+
+                    // add multiplicator for complex product
+                    if($col > 0) {
+                        // add + sign only iff str != nullstr
+                        if(strlen($str) != 0)$str .= " + \\mathbb{R}";
+                        else $str .= "\\mathbb{R}";
+                    }
+
+
+                    $str .="\\left( \\begin{array}{c}\n";
+
+                    for($row = 0; $row < $this->n; $row++) {
+                        $str .= $this->R[$col][$row];
+
+                        if($row != $this->n)$str .= " \\\\ ";
+                    }
+
+                    $str .= " \\end{array} \\right)";
+                }
+            }
+
+            // special case, zero vector
+            if(strlen($str) == 0)$str .= "0";
+
+
+        // handle special case R^n
+        if($this->lCurIndex == $this->n + 1) {
+            $str .= " = \\mathbb{R}^".$this->n;
+        }
+
+        return $str;
+    }
 // end class
 }
 

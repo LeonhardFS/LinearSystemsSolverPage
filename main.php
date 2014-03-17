@@ -230,7 +230,8 @@ Eine tolle Matheformel $Ax=b$ wird hier gelöst. Prima oder? $\frac{x+y}2$ PHP c
 
     ?>
 </table>
-<p>&nbsp;</p>
+<p>Loesung: <?php
+    echo "$"."L = ".$LS->getAffineSpaceTexString()."$";?></p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
