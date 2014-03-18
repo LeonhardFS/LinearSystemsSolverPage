@@ -204,7 +204,7 @@ class LinearSystem {
 	}
 
 	// row b holds result
-    // row b = coeff * row b - row a
+    // row b = row b - coeff * row a
     // coeff is determined by c
 	private function gaussRows($b, $a, $c) {
 		// c is column
@@ -214,7 +214,7 @@ class LinearSystem {
 		if($coefficient->numerator == $coefficient->denominator)$coefficient->reduce();
 
         // go through cols
-		for($k = 0; $k < $this->n; $k++) {
+		for($k = 0; $k < $this->n + 1; $k++) {
 			$this->R[$k][$b] = rminus($this->R[$k][$b], rtimes($coefficient, $this->R[$k][$a]));
 		}
 
@@ -227,11 +227,12 @@ class LinearSystem {
 		if($coefficient->numerator == $coefficient->denominator) // if 1, we do not have to display the obvious coefficient!
 			$str .= "\\text{".toRoman($b + 1)."} = \\text{".toRoman($b + 1)."} - \\text{".toRoman($a + 1)."}";
 		else
-			$str .= "\\text{".toRoman($b + 1)."} = ".$coefficient." \\cdot \\text{".toRoman($b + 1)."} - \\text{".toRoman($a + 1)."}";
+			$str .= "\\text{".toRoman($b + 1)."} = \\text{".toRoman($b + 1)."} - ".$coefficient." \\cdot \\text{".toRoman($a + 1)."}";
 
 		return $str;
 	}
 
+    // the magic function!
 	public function gaussStep() {
 		$str = "";
 
@@ -285,7 +286,7 @@ class LinearSystem {
 				else {
 					//substract rows
 					$str = "rechne ";//.toRoman($this->r + 1)." = ".toRoman($this->c + 1)." - ".toRoman($this->r + 1);
-					$tmp = $this->gaussRows($this->r + 1, $this->c, $this->c);
+					$tmp = $this->gaussRows($this->r, $this->c, $this->c);
 					$str.="$".$tmp."$";
 				}
 

@@ -2,6 +2,7 @@
 include_once('LinearSystem.php');
 include_once('RationalNumber.php');
 include_once('math.php');
+include_once('tests.php');
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -150,14 +151,13 @@ Eine tolle Matheformel $Ax=b$ wird hier gelöst. Prima oder? $\frac{x+y}2$ PHP c
     $b[1] = new RationalNumber(0);
     $b[2] = new RationalNumber(0);
 
+    // Test Case 1
+    loadTest1();
 
     $LS = new LinearSystem($n);
     $LS->A = $A;
     $LS->b = $b;
     $LS->initGauss();
-    ?>
-    <p>Lösungsvektor $\vec{x} = <?php echo texVector($x, 3); ?>$</p>
-    <?php
 
 
     $i = 0;
