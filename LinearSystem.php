@@ -236,7 +236,7 @@ class LinearSystem {
 		if($coefficient->numerator == $coefficient->denominator) // if 1, we do not have to display the obvious coefficient!
 			$str .= "\\text{".toRoman($b + 1)."} = \\text{".toRoman($b + 1)."} - \\text{".toRoman($a + 1)."}";
 		else
-			$str .= "\\text{".toRoman($b + 1)."} = \\text{".toRoman($b + 1)."} - ".$coefficient." \\cdot \\text{".toRoman($a + 1)."}";
+			$str .= "\\text{".toRoman($b + 1)."} = \\text{".toRoman($b + 1)."} - ".$coefficient->toTexWithBrackets()." \\cdot \\text{".toRoman($a + 1)."}";
 
 		return $str;
 	}
@@ -312,9 +312,6 @@ class LinearSystem {
 				$this->r = $this->c + 1;
 				//$str .= "new column c: ".$this->c." r: ".$this->r;
 			}
-
-            $str.="<br>".$this->r;
-
 		}
 
 		// should mode be changed?
@@ -368,7 +365,7 @@ class LinearSystem {
                         else
 					        $str = "nichts zu tun, nächste Zeile";
 					else
-					$str = "kuerzen, rechne $\\text{".toRoman($this->c + 1). "} = \\text{".toRoman($this->c + 1)."}  : ".$this->A[$this->r][$this->c]."$";
+					$str = "kuerzen, rechne $\\text{".toRoman($this->c + 1). "} = \\text{".toRoman($this->c + 1)."}  : ".$this->A[$this->r][$this->c]->toTexWithBrackets()."$";
 
 					// go through R
 					for($i = 0; $i < $this->n - 1; $i++) {
@@ -390,8 +387,7 @@ class LinearSystem {
 
 					// go through R
 					for($i = 0; $i < $this->n - 1; $i++) {
-                        $str .= "<br>Hier ".$this->R[$i][$this->c]." -=".$this->A[$this->r][$this->c]." * ".$this->R[$i][$this->r];
-						$this->R[$i][$this->c] = rminus($this->R[$i][$this->c], rtimes($this->A[$this->r][$this->c], $this->R[$i][$this->r]));
+                        $this->R[$i][$this->c] = rminus($this->R[$i][$this->c], rtimes($this->A[$this->r][$this->c], $this->R[$i][$this->r]));
 					}
 					// set to zero(no complicated calculations)
 					$this->A[$this->r][$this->c] = new RationalNumber(0);

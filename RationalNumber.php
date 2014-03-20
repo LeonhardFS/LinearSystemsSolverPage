@@ -81,7 +81,7 @@ class RationalNumber {
 	}
 	
 	// convert to frac tex string
-	public function totex() {
+	public function toTex() {
 		$res = "";
 
         // special case zero
@@ -100,11 +100,20 @@ class RationalNumber {
 		
 		return $res;
 	}
-	
-	// magic method to string
+
+    // magic method to string
 	public function __toString() {
-		return $this->totex();
+		return $this->toTex();
 	}
+
+    // if number is negative, mathematical notation needs values to be in brackets. this helper does such magic
+    public function  toTexWithBrackets() {
+
+        // if negative, use angular brackets
+        if($this->isNegative())
+            return "\\left(".$this->toTex()."\\right)";
+        else return $this->toTex();
+    }
 
     // is rational number negative?
     public function isNegative() {
