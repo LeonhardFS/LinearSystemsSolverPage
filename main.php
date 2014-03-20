@@ -12,7 +12,7 @@ ini_set('display_errors', 1);
 <html>
 <head>
     <!-- allow unicode characters in file -->
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Ax=b</title>
     <style type="text/css">
         @import url("style.css");
@@ -21,7 +21,9 @@ ini_set('display_errors', 1);
     <!-- configuring MathJax to allow inline TexSyntax !-->
     <script type="text/x-mathjax-config">
   MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-</script>
+
+
+    </script>
     <!-- local copy !-->
     <!--<script type="text/javascript" src="./MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     -->
@@ -34,11 +36,13 @@ ini_set('display_errors', 1);
 
 <body>
 <h1>Gleichungssystem $Ax=b$</h1>
+
 <h2>Schritt 1: Gleichung aufstellen</h2>
+
 <p>Hier ist der tolle Gauss Löser!</p>
 
 
-<table width="100%" border="0">
+<table border="0">
     <?php
     // solve Gauss here
     $n = 3;
@@ -54,7 +58,7 @@ ini_set('display_errors', 1);
     // Test matrix: 1 2 3  *  1  =  4
     //              0 1 2  *  0  =  2
     //              0 1 1  *  1  =  1
-    $A[0][0] = new RationalNumber(1);  // first column
+    $A[0][0] = new RationalNumber(1); // first column
     $A[0][1] = new RationalNumber(0);
     $A[0][2] = new RationalNumber(0);
 
@@ -86,7 +90,7 @@ ini_set('display_errors', 1);
     // <-> solution: 0        1
     //               2 + R * -2
     //               0        1
-    $A[0][0] = new RationalNumber(1);  // first column
+    $A[0][0] = new RationalNumber(1); // first column
     $A[0][1] = new RationalNumber(0);
     $A[0][2] = new RationalNumber(0);
 
@@ -105,34 +109,11 @@ ini_set('display_errors', 1);
     $b[1] = new RationalNumber(2);
     $b[2] = new RationalNumber(2);
 
-    // 3rd test case, solution is R^3
-    // Test matrix: 0 0 0 * (t)    = 0
-    //              0 0 0 * (s)    = 0
-    //              0 0 0 * (r)    = 0
-
-    // <-> solution: R^3
-    $A[0][0] = new RationalNumber(0);  // first column
-    $A[0][1] = new RationalNumber(0);
-    $A[0][2] = new RationalNumber(0);
-
-    // second column zero
-    $A[1][0] = new RationalNumber(0); // second column
-    $A[1][1] = new RationalNumber(0);
-    $A[1][2] = new RationalNumber(0);
-
-    // third column zero
-    $A[2][0] = new RationalNumber(0); // third column
-    $A[2][1] = new RationalNumber(0);
-    $A[2][2] = new RationalNumber(0);
-
-    // b
-    $b[0] = new RationalNumber(0);
-    $b[1] = new RationalNumber(0);
-    $b[2] = new RationalNumber(0);
 
     // Test Case 1
     loadTest1();
     loadTest2();
+    loadTest3();
 
     $LS = new LinearSystem($n);
     $LS->A = $A;
@@ -158,7 +139,7 @@ ini_set('display_errors', 1);
     $x[0] = $LS->R[0][0];
     $x[1] = $LS->R[0][1];
     $x[2] = $LS->R[0][2];
-    echo "$".texExtMatrix($LS->A,$x, 3)."$";
+    echo "$" . texExtMatrix($LS->A, $x, 3) . "$";
 
     echo "</div>";
 
@@ -169,7 +150,7 @@ ini_set('display_errors', 1);
 
     echo "</td></tr>";
 
-    while($LS->finished() <> true){
+    while ($LS->finished() <> true) {
 
         $i++;
 
@@ -193,7 +174,7 @@ ini_set('display_errors', 1);
         $x[2] = $LS->R[0][2];
 
 //echo "$".texExtMatrix($LS->A,$x, 3)."$";
-        echo "$".$LS->getFormattedTexCode()."$";
+        echo "$" . $LS->getFormattedTexCode() . "$";
         echo "</div>";
 
         echo "</td>
@@ -205,27 +186,42 @@ ini_set('display_errors', 1);
 
 
         // securing
-        if($i > 15)break;
+        if ($i > 15) break;
     }
 
     ?>
 </table>
 <p>Loesung: <?php
-    echo "$"."L = ".$LS->getAffineSpaceTexString()."$";?></p>
+    echo "$" . "L = " . $LS->getAffineSpaceTexString() . "$";?></p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
+
 <p>&nbsp;</p>
 
 </body>
