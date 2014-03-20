@@ -210,16 +210,25 @@ class LinearSystem {
 		// c is column
 		$coefficient = rdivide($this->A[$c][$b], $this->A[$c][$a]);
 
+        // reduce
+        $coefficient->reduce();
+
 		// small optimization, when coefficient is 1, reduce immediately
 		if($coefficient->numerator == $coefficient->denominator)$coefficient->reduce();
 
         // go through cols
 		for($k = 0; $k < $this->n + 1; $k++) {
 			$this->R[$k][$b] = rminus($this->R[$k][$b], rtimes($coefficient, $this->R[$k][$a]));
+
+            // reduce
+            $this->R[$k][$b]->reduce();
 		}
 
 		for($k = $c; $k < $this->n; $k++) {
 			$this->A[$k][$b] = rminus($this->A[$k][$b], rtimes($coefficient, $this->A[$k][$a]));
+
+            // reduce
+            $this->A[$k][$b]->reduce();
 		}
 
 		// return descriptional string for output

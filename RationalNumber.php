@@ -83,6 +83,11 @@ class RationalNumber {
 	// convert to frac tex string
 	public function totex() {
 		$res = "";
+
+        // special case zero
+        if($this->numerator == 0)return "0";
+
+        // convert to fractional layout
 		if($this->denominator <> 1) {
 			$res.="\\frac{";
 			$res.=$this->numerator;
