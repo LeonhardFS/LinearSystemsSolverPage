@@ -35,29 +35,8 @@ ini_set('display_errors', 1);
 <body>
 <h1>Gleichungssystem $Ax=b$</h1>
 <h2>Schritt 1: Gleichung aufstellen</h2>
-toll
-Eine tolle Matheformel $Ax=b$ wird hier gelöst. Prima oder? $\frac{x+y}2$ PHP class test:
-<p><?php
-    $r1 = new RationalNumber();
-    $r2 = new RationalNumber(3, 5);
-    $r3 = new RationalNumber(20, 1);
-    $r4 = new RationalNumber(20, 4);
-    echo "<p>$".$r1->totex()."$</p>";
-    echo "<p>$".$r2->totex()."$</p>";
-    echo "<p>$".$r3->totex()."$</p>";
-    echo "<p>$".$r4->totex()."$</p>";
-    $r4->reduce();
-    echo "<p>$".$r4->totex()."$</p>";
-    $tr4 = clone $r4;
-    $r4->minus($r2);
-    echo "<p>$".$tr4->totex()." - ".$r2->totex()." = ".$r4->totex();
-    $r4->reduce();
-    echo " = ".$r4->totex()."$</p>";
+<p>Hier ist der tolle Gauss Löser!</p>
 
-    echo "<p>".gcd(120, 60)."</p>";
-    echo "<p>$".rplus(new RationalNumber(30, 4), new RationalNumber(2,4))->totex()."$</p>";
-
-    ?></p>
 
 <table width="100%" border="0">
     <?php
@@ -153,6 +132,7 @@ Eine tolle Matheformel $Ax=b$ wird hier gelöst. Prima oder? $\frac{x+y}2$ PHP c
 
     // Test Case 1
     loadTest1();
+    loadTest2();
 
     $LS = new LinearSystem($n);
     $LS->A = $A;

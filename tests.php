@@ -55,4 +55,52 @@ function loadTest1() {
     $R[3][1] = new RationalNumber(0);
     $R[3][2] = new RationalNumber(0);
 }
+
+
+function loadTest2() {
+    global $A;
+    global $b;
+    global $R;
+
+    // Test matrix: 1 2 3  *  1  =  4
+    //              0 1 2  *  0  =  2
+    //              0 1 1  *  1  =  1
+    $A[0][0] = new RationalNumber(1);  // first column
+    $A[0][1] = new RationalNumber(0);
+    $A[0][2] = new RationalNumber(0);
+
+    // second column zero
+    $A[1][0] = new RationalNumber(2); // second column
+    $A[1][1] = new RationalNumber(1);
+    $A[1][2] = new RationalNumber(1);
+
+    // third column zero
+    $A[2][0] = new RationalNumber(3); // third column
+    $A[2][1] = new RationalNumber(2);
+    $A[2][2] = new RationalNumber(1);
+
+    // b
+    $b[0] = new RationalNumber(4);
+    $b[1] = new RationalNumber(2);
+    $b[2] = new RationalNumber(1);
+
+    $R[0][0] = new RationalNumber(1);  // first column
+    $R[0][1] = new RationalNumber(0);
+    $R[0][2] = new RationalNumber(1);
+
+    // second column zero
+    $R[1][0] = new RationalNumber(0); // second column
+    $R[1][1] = new RationalNumber(0);
+    $R[1][2] = new RationalNumber(0);
+
+    // third column zero
+    $R[2][0] = new RationalNumber(0); // third column
+    $R[2][1] = new RationalNumber(0);
+    $R[2][2] = new RationalNumber(0);
+
+    // fourth column zero
+    $R[3][0] = new RationalNumber(0); // fourth column
+    $R[3][1] = new RationalNumber(0);
+    $R[3][2] = new RationalNumber(0);
+}
 ?>
