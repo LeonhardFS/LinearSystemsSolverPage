@@ -330,7 +330,7 @@ class LinearSystem {
             $this->R[$this->lCurIndex][$this->c] = new RationalNumber(1);
 
             if($this->lCurIndex - 1 < $this->maxVarNames)
-                $str = "Nullzeile, führe neue Variable ".$this->varNames[$this->lCurIndex - 1]." ein";
+                $str = "Nullzeile, führe neue Variable $".$this->varNames[$this->lCurIndex - 1]." \\in \\mathbb{R}$ ein";
             else $str ="error";
 
             $this->lCurIndex++;
@@ -423,6 +423,10 @@ class LinearSystem {
                 $str .= " & ";
                 if($j == $this->n - 1) {
 
+                    // print out first entry if != 0
+                    if($this->R[0][$i]->numerator <> 0) // numerator != 0
+                        $str .= $this->R[0][$i];
+
                     // go through all vars introduced for zero rows
                     for($k = 1; $k < $this->n + 1; $k++) {
                         if($this->R[$k][$i]->numerator <> 0) // numerator != 0
@@ -437,7 +441,7 @@ class LinearSystem {
 
                     // check special case, iff all entries of R equal zero
                     $allzero = true;
-                    for($k = 1; $k < $this->n + 1; $k++) {
+                    for($k = 0; $k < $this->n + 1; $k++) {
                         if(!requals($this->R[$k][$i], new RationalNumber(0))) {
                             $allzero = false;
                             break;
