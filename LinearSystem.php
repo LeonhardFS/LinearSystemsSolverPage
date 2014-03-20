@@ -247,9 +247,9 @@ class LinearSystem
         // return descriptional string for output
         $str = "";
         if ($coefficient->numerator == $coefficient->denominator) // if 1, we do not have to display the obvious coefficient!
-            $str .= "\\text{" . toRoman($b + 1) . "} = \\text{" . toRoman($b + 1) . "} - \\text{" . toRoman($a + 1) . "}";
+            $str .= "\\tilde{\\text{" . toRoman($b + 1) . "}} = \\text{" . toRoman($b + 1) . "} - \\text{" . toRoman($a + 1) . "}";
         else
-            $str .= "\\text{" . toRoman($b + 1) . "} = \\text{" . toRoman($b + 1) . "} - " . $coefficient->toTexWithBrackets() . " \\cdot \\text{" . toRoman($a + 1) . "}";
+            $str .= "\\tilde{\\text{" . toRoman($b + 1) . "}} = \\text{" . toRoman($b + 1) . "} - " . $coefficient->toTexWithBrackets() . " \\cdot \\text{" . toRoman($a + 1) . "}";
 
         return $str;
     }
@@ -366,7 +366,7 @@ class LinearSystem
                         else
                             $str = "nichts zu tun, nächste Zeile";
                     else {
-                        $str = "kuerzen, rechne $\\text{" . toRoman($this->c + 1) . "} = \\text{" . toRoman($this->c + 1) . "}  : " . $this->A[$this->r][$this->c]->toTexWithBrackets() . "$";
+                        $str = "kuerzen, rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "}  : " . $this->A[$this->r][$this->c]->toTexWithBrackets() . "$";
 
                         // go through R
                         for ($i = 0; $i < $this->n - 1; $i++) {
@@ -382,9 +382,9 @@ class LinearSystem
                     // text output, for 1 * something shorten! 0 * something has also to be dealt with!
                     // ATTENTION!
                     if ($this->A[$this->r][$this->c]->numerator == $this->A[$this->r][$this->c]->denominator)
-                        $str = "rechne $\\text{" . toRoman($this->c + 1) . "} = \\text{" . toRoman($this->c + 1) . "} - \\text{" . toRoman($this->r + 1) . "}$";
+                        $str = "rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "} - \\text{" . toRoman($this->r + 1) . "}$";
                     else
-                        $str = "rechne $\\text{" . toRoman($this->c + 1) . "} = \\text{" . toRoman($this->c + 1) . "} -" . $this->A[$this->r][$this->c] . "\\cdot \\text{" . toRoman($this->r + 1) . "}$";
+                        $str = "rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "} -" . $this->A[$this->r][$this->c] . "\\cdot \\text{" . toRoman($this->r + 1) . "}$";
 
                     // go through R
                     for ($i = 0; $i < $this->n - 1; $i++) {

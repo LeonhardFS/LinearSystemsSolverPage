@@ -47,73 +47,10 @@ ini_set('display_errors', 1);
     // solve Gauss here
     $n = 3;
 
-    // matrix test
-    $A = randMatrix($n);
-    $x = randVector($n);
-    $b = transformVector($A, $x, $n);
-
-    // Attention !!! Test Zero matrices!
-    // test purposes
-
-    // Test matrix: 1 2 3  *  1  =  4
-    //              0 1 2  *  0  =  2
-    //              0 1 1  *  1  =  1
-    $A[0][0] = new RationalNumber(1); // first column
-    $A[0][1] = new RationalNumber(0);
-    $A[0][2] = new RationalNumber(0);
-
-    // second column zero
-    $A[1][0] = new RationalNumber(2); // second column
-    $A[1][1] = new RationalNumber(1);
-    $A[1][2] = new RationalNumber(1);
-
-    // third column zero
-    $A[2][0] = new RationalNumber(3); // third column
-    $A[2][1] = new RationalNumber(2);
-    $A[2][2] = new RationalNumber(1);
-
-    // b
-    $b[0] = new RationalNumber(4);
-    $b[1] = new RationalNumber(2);
-    $b[2] = new RationalNumber(1);
-
-    // x
-    $x[0] = 1;
-    $x[1] = 0;
-    $x[2] = 1;
-
-    // 2nd test case, solution is an affine vector space
-    // Test matrix: 1 2 3 * (t)    = 4
-    //              0 1 2 * (2-2t) = 2
-    //              0 1 2 * (t)    = 2
-
-    // <-> solution: 0        1
-    //               2 + R * -2
-    //               0        1
-    $A[0][0] = new RationalNumber(1); // first column
-    $A[0][1] = new RationalNumber(0);
-    $A[0][2] = new RationalNumber(0);
-
-    // second column zero
-    $A[1][0] = new RationalNumber(2); // second column
-    $A[1][1] = new RationalNumber(1);
-    $A[1][2] = new RationalNumber(1);
-
-    // third column zero
-    $A[2][0] = new RationalNumber(3); // third column
-    $A[2][1] = new RationalNumber(2);
-    $A[2][2] = new RationalNumber(2);
-
-    // b
-    $b[0] = new RationalNumber(4);
-    $b[1] = new RationalNumber(2);
-    $b[2] = new RationalNumber(2);
-
-
-    // Test Case 1
+    // load test case
     loadTest1();
-    loadTest2();
-    loadTest3();
+    //loadTest2();
+    //loadTest3();
 
     $LS = new LinearSystem($n);
     $LS->A = $A;
