@@ -12,6 +12,7 @@ function loadTest1() {
     global $b;
     global $R;
 
+    // note, here matrix has rk = 2!! => vector space as solution
     // Test matrix: 1 2 3  *  1  =  1
     //              4 5 6  *  3  =  7
     //              7 8 9  * -2  =  13

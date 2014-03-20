@@ -285,7 +285,7 @@ class LinearSystem {
 				}
 				else {
 					//substract rows
-					$str = "rechne ";//.toRoman($this->r + 1)." = ".toRoman($this->c + 1)." - ".toRoman($this->r + 1);
+                    $str = "rechne ";
 					$tmp = $this->gaussRows($this->r, $this->c, $this->c);
 					$str.="$".$tmp."$";
 				}
@@ -298,11 +298,13 @@ class LinearSystem {
 
 			$this->r++;
 			//already finished?
-			if($this->r >= $this->n - 1) {
+			if($this->r >= $this->n) {
 				$this->c++;
-				$this->r = $this->c;
+				$this->r = $this->c + 1;
 				//$str .= "new column c: ".$this->c." r: ".$this->r;
 			}
+
+            $str.="<br>".$this->r;
 
 		}
 
