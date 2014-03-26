@@ -18,6 +18,9 @@ ini_set('display_errors', 1);
         @import url("style.css");
     </style>
 
+    <!-- include jQuery from web source!-->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
     <!-- configuring MathJax to allow inline TexSyntax !-->
     <script type="text/x-mathjax-config">
   MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
@@ -32,6 +35,16 @@ ini_set('display_errors', 1);
             src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
     </script>
 
+
+    <!-- all jQuery code for this doc goes here !-->
+    <script>
+        $(document).ready(function(){
+
+            // do here the magic
+
+
+        });
+    </script>
 </head>
 
 <body>
@@ -40,6 +53,14 @@ ini_set('display_errors', 1);
 <h2>Schritt 1: Gleichung aufstellen</h2>
 
 <p>Hier ist der tolle Gauss Löser!</p>
+
+<!-- input object !-->
+
+<div id="inputObject">
+
+    <input type="text" class="code" id="customFieldValue" name="customFieldValue[]" value="0" />
+
+</div>
 
 
 <table border="0">
