@@ -58,7 +58,17 @@ ini_set('display_errors', 1);
 
 <div id="inputObject">
 
-    <input type="text" class="code" id="customFieldValue" name="customFieldValue[]" value="0" />
+    <table>
+        <tr>
+            <td><input class="vecClass"></td>
+            <td><input class="vecClass"></td>
+            <td><input class="vecClass"></td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>7</td>
+        </tr>
+    </table>
 
 </div>
 
