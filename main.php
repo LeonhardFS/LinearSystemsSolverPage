@@ -53,25 +53,59 @@ ini_set('display_errors', 1);
 <h2>Schritt 1: Gleichung aufstellen</h2>
 
 <p>Hier ist der tolle Gauss Löser!</p>
+<p></p>
+<table style="margin-left: auto;margin-right: auto">
+    <tr>
+        <td>
+            <form>
+                <table class="matrixDecor">
+                    <tr>
+                        <td><input type="text"></td>
+                        <td><input type="text"></td>
+                        <td><input type="text"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text"></td>
+                        <td><input type="text"></td>
+                        <td><input type="text"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text"></td>
+                        <td><input type="text"></td>
+                        <td><input type="text"></td>
+                    </tr>
+                </table>
+            </form>
 
-<!-- input object !-->
-
-<div id="inputObject">
-
-    <table>
-        <tr>
-            <td><input class="vecClass"></td>
-            <td><input class="vecClass"></td>
-            <td><input class="vecClass"></td>
-        </tr>
-        <tr>
-            <td>6</td>
-            <td>7</td>
-        </tr>
-    </table>
-
-</div>
-
+        </td>
+        <td>$\cdot$</td>
+        <td>
+<!--                $\left( \begin{array}{c} x_1 \\ x_2 \\ x_3 \end{array} \right)$-->
+            <table style="height: auto" class="matrixDecor">
+                <tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center;">$x_1$</div></td></tr>
+                <tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center">$x_2$</div></td></tr>
+                <tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center">$x_3$</div></td></tr>
+            </table>
+        </td>
+        <td>=</td>
+        <td>
+            <table class="matrixDecor">
+                <tr>
+                    <td><input type="text"></td>
+                </tr>
+                <tr>
+                    <td><input type="text"></td>
+                </tr>
+                <tr>
+                    <td><input type="text"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5" style="text-align: center"><input type="button" value="Lösen" class="buttonDecor"></td>
+    </tr>
+</table>
 
 <table border="0">
     <?php
@@ -134,7 +168,7 @@ ini_set('display_errors', 1);
         echo "</td>
     <td width=\"64%\">";
 
-        echo "<div style=\"font-size: 200%;\">";
+        echo "<div style=\"font-size: 150%;\">";
 
         $x = array();
         $x[0] = $LS->R[0][0];

@@ -51,3 +51,72 @@ input.vecClass {
     text-align: center;
     margin: 0;
 }
+
+/* adds borderimage in matrix style to class */
+.matrixDecor {
+   border-width: 10px 10px;
+   border-image: url("img/matrixborderimage.png") 36 31 round;
+    padding: 0px;
+    /*background-color: #f0f035;
+    background-clip: content-box;*/
+    border-spacing: 10px;
+}
+
+
+.matrixDecor input {
+    width: 40px;
+    height: 18px;
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: #dddddd;
+    border-style: solid;
+    text-align: center;
+}
+.matrixDecor input:hover, input:active, input:focus {
+
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: #47aaca;
+    border-style: solid;
+    box-shadow: 0px 0px 8px 0px #47aaca;
+    background-color: #d3e9eb;
+}
+
+.buttonDecor {
+    border-radius: 6px;
+    border-width: 1px;
+    border-color: #999999;
+    border-style: solid;
+    background-color: #ececec;
+    width: 80px;
+    height: 30px;
+    font-size: 14px;
+    text-align: center;
+    margin: 10px;
+    font-weight: bold;
+}
+
+.buttonDecor:hover {
+    border-color: #47aaca;
+    border-style: solid;
+    box-shadow: 0px 0px 8px 0px #47aaca;
+    background-color: #d3e9eb;
+}
+.nopadding {
+    padding: 0;
+    margin: 0;
+    background-color: #800020;
+}
+
+.m_1x1 {
+    background-image: url("img/1xn_l.png"), url("img/1xn_r.png");
+    background-position: left, right;
+    padding: 8px;
+    background-size: cover;
+    font: 16px;
+}
+
+.m_nxn {
+ background:    url("img/nxn_tl.png") no-repeat left top ,
+                url("img/nxn_bl.png") no-repeat left bottom;
+}

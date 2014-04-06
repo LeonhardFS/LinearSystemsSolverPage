@@ -46,7 +46,7 @@ function randVector($n)
 function texVector($v, $n)
 {
     $str = "";
-    $str .= "\\left( \\begin{array}{c}\n";
+    $str .= "\\left( \\begin{array}{r}\n";
     for ($i = 0; $i < $n; $i++) {
         $str .= $v[$i];
         if ($i <> $n - 1) $str .= "\\\\";
