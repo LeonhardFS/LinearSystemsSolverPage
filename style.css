@@ -54,7 +54,7 @@ input.vecClass {
 
 /* adds borderimage in matrix style to class */
 .matrixDecor {
-   border-width: 10px 10px;
+   border-width: 9px 9px;
    border-image: url("img/matrixborderimage.png") 36 31 round;
     padding: 0px;
     /*background-color: #f0f035;
@@ -85,14 +85,15 @@ input.vecClass {
 .buttonDecor {
     border-radius: 6px;
     border-width: 1px;
-    border-color: #999999;
+    border-color: #d0d0d0;
     border-style: solid;
-    background-color: #ececec;
+    background-color: #f8f8f8;
     width: 80px;
     height: 30px;
     font-size: 14px;
     text-align: center;
     margin: 10px;
+    margin-bottom: 0px; /*hard coded correction for hr margin*/
     font-weight: bold;
 }
 
@@ -119,4 +120,61 @@ input.vecClass {
 .m_nxn {
  background:    url("img/nxn_tl.png") no-repeat left top ,
                 url("img/nxn_bl.png") no-repeat left bottom;
+}
+
+.horzSpace {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+hr { display: block; height: 1px;
+    border: 0; border-top: 1px solid #dddddd;
+    padding: 0;
+margin-right: auto;
+margin-left: auto;
+margin-top: 20px;
+margin-bottom: 20px}
+
+.roundDecor {
+    display: block;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    background: #fefefe;
+    border-width: 1px;
+    border-color: #d0d0d0;
+    color: #969696;
+    border-style: solid;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
+}
+
+.roundRectDecor {
+    display: block;
+    width: 100%;
+    border-radius: 6px;
+    background: #fff2e6;
+    border-width: 1px;
+    border-color: #ffbd80;
+    border-style: solid;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
+    padding: 10px;
+}
+
+.solution {
+    width: 33%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 6px;
+    padding: 20px;
+    display: block;
+    text-align: center;
+    vertical-align: middle;
+    background: #d3e9eb;
+    border-width: 1px;
+    border-color: #47aaca;
+    border-style: solid;
 }

@@ -53,6 +53,7 @@ ini_set('display_errors', 1);
 <h2>Schritt 1: Gleichung aufstellen</h2>
 
 <p>Hier ist der tolle Gauss Löser!</p>
+<span class="roundDecor">1</span>
 <p></p>
 <table style="margin-left: auto;margin-right: auto">
     <tr>
@@ -106,8 +107,10 @@ ini_set('display_errors', 1);
         <td colspan="5" style="text-align: center"><input type="button" value="Lösen" class="buttonDecor"></td>
     </tr>
 </table>
-
-<table border="0">
+<p class="horzSpace"></p>
+<hr style="width: 90%">
+<p class="horzSpace"></p>
+<table style="min-width:300px;max-width:500px;margin-left: auto;margin-right: auto;margin-top: 20px">
     <?php
     // solve Gauss here
     $n = 3;
@@ -128,14 +131,14 @@ ini_set('display_errors', 1);
 
     echo "
   <tr>
-    <td width=\"3%\">";
+    <td>";
 
-    echo $i;
+    echo "<span style=\"width:20px\" class=\"roundDecor\">".$i."</span>";
 
     echo "</td>
-    <td width=\"64%\">";
+    <td ";
 
-    echo "<div style=\"font-size: 200%;\">";
+    echo "<div style=\"font-size: 150%;width: 100%;text-align: center\">";
 
     $x = array();
     $x[0] = $LS->R[0][0];
@@ -161,14 +164,14 @@ ini_set('display_errors', 1);
 
         echo "
   <tr>
-    <td width=\"3%\">";
+    <td>";
 
-        echo $i;
+        echo "<span style=\"width:20px\" class=\"roundDecor\">".$i."</span>";
 
         echo "</td>
-    <td width=\"64%\">";
+    <td>";
 
-        echo "<div style=\"font-size: 150%;\">";
+        echo "<div style=\"font-size: 150%;width: 100%;text-align: center\">";
 
         $x = array();
         $x[0] = $LS->R[0][0];
@@ -182,7 +185,7 @@ ini_set('display_errors', 1);
         echo "</td>
     <td width=\"33%\">";
 
-        echo $str;
+        echo "<span class=\"roundRectDecor\">".$str."</span>";
 
         echo "</td></tr>";
 
@@ -193,38 +196,11 @@ ini_set('display_errors', 1);
 
     ?>
 </table>
-<p>Loesung: <?php
-    echo "$" . "L = " . $LS->getAffineSpaceTexString() . "$";?></p>
+<hr style="width: 90%">
 
-<p>&nbsp;</p>
+<div class="solution">Lösung: <?php
+    echo "$" . "L = " . $LS->getAffineSpaceTexString() . "$";?></div>
 
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<p>&nbsp;</p>
 
 </body>
 </html>
