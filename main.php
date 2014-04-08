@@ -319,11 +319,14 @@ parsePostRequest();
         <td><div style="font-size:150%;width: 100%;text-align: center">$<?php echo $strMatExLast; ?>$</div></td>
         <td><span class="roundRectDecor"><?php echo $strDescCur; ?></span></td>
     </tr>
-    <tr>
-        <td><?php echo "<span style=\"width:20px\" class=\"roundDecor\">".($i+2)."</span>"?></td>
-        <td><div style="font-size:150%;width: 100%;text-align: center">$<?php echo $LS->getFormattedTexCode(); ?>$</div></td>
-        <td><span class="roundRectDecor">Ergebnis aus Matrix ablesen</span></td>
-    </tr>
+    <?php
+        // print last info if necessary
+        if(strpos($strDescCur, 'Ergebnis') === false) {
+            echo "<tr><td><span style=\"width:20px\" class=\"roundDecor\">".($i+2)."</span></td>
+    <td><div style=\"font-size:150%;width: 100%;text-align: center\">\$".$LS->getFormattedTexCode()."\$</div></td>
+    <td><span class=\"roundRectDecor\">Ergebnis aus Matrix ablesen</span></td></tr>";
+        }
+    ?>
 
 </table>
 <hr style="width: 90%" class="separator">

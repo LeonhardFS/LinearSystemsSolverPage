@@ -40,6 +40,14 @@ class RationalNumber
         $this->denominator = $denominator;
     }
 
+    // beautifies such that denominator > 0 holds
+    function reduceSign() {
+        if($this->denominator < 0) {
+            $this->numerator = -$this->numerator;
+            $this->denominator = -$this->denominator;
+        }
+    }
+
     // reduce rational number by gcd
     function reduce()
     {
@@ -48,6 +56,9 @@ class RationalNumber
         // reduce
         $this->numerator /= $gcd;
         $this->denominator /= $gcd;
+
+        // also do some beautification, the sign will be always in the numerator!
+        $this->reduceSign();
 
         return $gcd == 1;
     }
@@ -99,9 +110,12 @@ class RationalNumber
         if ($this->numerator == 0) return "0";
 
         // convert to fractional layout
+        // put sign outside of frac for cleaner look!
         if ($this->denominator <> 1) {
+            if($this->numerator < 0)$res .= "-";
+
             $res .= "\\frac{";
-            $res .= $this->numerator;
+            $res .= abs($this->numerator);
             $res .= "}{";
             $res .= $this->denominator;
             $res .= "}";

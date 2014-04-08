@@ -360,7 +360,7 @@ class LinearSystem
                     if ($this->A[$this->r][$this->c]->numerator == $this->A[$this->r][$this->c]->denominator)
                         // finished?
                         if ($this->c == 0)
-                            $str = "Ergebnis aus erweiterter Koeffizientenmatrix ablesen";
+                            $str = "Ergebnis aus Matrix ablesen";
                         else
                             $str = "nichts zu tun, nächste Zeile";
                     else {
@@ -382,7 +382,7 @@ class LinearSystem
                     if ($this->A[$this->r][$this->c]->numerator == $this->A[$this->r][$this->c]->denominator)
                         $str = "rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "} - \\text{" . toRoman($this->r + 1) . "}$";
                     else
-                        $str = "rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "} -" . $this->A[$this->r][$this->c] . "\\cdot \\text{" . toRoman($this->r + 1) . "}$";
+                        $str = "rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "} -" . $this->A[$this->r][$this->c]->toTexWithBrackets(). "\\cdot \\text{" . toRoman($this->r + 1) . "}$";
 
                     // go through R
                     for ($i = 0; $i < $this->n - 1; $i++) {
