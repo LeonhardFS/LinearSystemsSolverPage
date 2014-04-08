@@ -352,8 +352,6 @@ class LinearSystem
                 else $str = "error";
 
                 $this->lCurIndex++;
-
-                //$str="error not yet implemented";
             } else {
                 // go through all elements in row with r as counter
 
@@ -366,7 +364,7 @@ class LinearSystem
                         else
                             $str = "nichts zu tun, nächste Zeile";
                     else {
-                        $str = "kuerzen, rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "}  : " . $this->A[$this->r][$this->c]->toTexWithBrackets() . "$";
+                        $str = "kürzen, rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "}  : " . $this->A[$this->r][$this->c]->toTexWithBrackets() . "$";
 
                         // go through R
                         for ($i = 0; $i < $this->n - 1; $i++) {
@@ -404,8 +402,6 @@ class LinearSystem
                 $this->r = $this->n - 1;
                 $this->c--;
             }
-
-            //echo "Well done!";
 
             // negative ?
             if ($this->c == -1) $this->finished = true;

@@ -253,8 +253,8 @@ parsePostRequest();
     // solve Gauss here
 
 
-    // load test case
-    //loadTest1();
+    // load test cases, if wished
+    // loadTest1();
     //loadTest2();
     //loadTest3();
 
@@ -268,38 +268,23 @@ parsePostRequest();
     $i = 0;
 
 
-    echo "
-  <tr>
-    <td>";
+    // we always have secured two steps
+    $strMatExCur = $LS->getFormattedTexCode();
+    $strDescCur = $LS->gaussStep();
+    $strMatExLast = $strMatExCur;
+    $strDescLast = $strDescCur;
 
-    echo "<span style=\"width:20px\" class=\"roundDecor\">".$i."</span>";
-
-    echo "</td>
-    <td ";
-
-    echo "<div style=\"font-size: 150%;width: 100%;text-align: center\">";
-
-    $x = array();
-    $x[0] = $LS->R[0][0];
-    $x[1] = $LS->R[0][1];
-    $x[2] = $LS->R[0][2];
-    echo "$" . texExtMatrix($LS->A, $x, 3) . "$";
-
-    echo "</div>";
-
-    echo "</td>
-    <td width=\"33%\">";
-
-    echo "Ausgangsmatrix";
-
-    echo "</td></tr>";
-
+    $fin = $LS->finished();
     while ($LS->finished() <> true) {
 
         $i++;
-
         // step
-        $str = $LS->gaussStep();
+        $strMatExLast = $strMatExCur;
+        $strDescLast = $strDescCur;
+        $strMatExCur = $LS->getFormattedTexCode();
+        $strDescCur = $LS->gaussStep();
+
+
 
         echo "
   <tr>
@@ -312,19 +297,13 @@ parsePostRequest();
 
         echo "<div style=\"font-size: 150%;width: 100%;text-align: center\">";
 
-        $x = array();
-        $x[0] = $LS->R[0][0];
-        $x[1] = $LS->R[0][1];
-        $x[2] = $LS->R[0][2];
-
-//echo "$".texExtMatrix($LS->A,$x, 3)."$";
-        echo "$" . $LS->getFormattedTexCode() . "$";
+        echo "$" .$strMatExLast. "$";
         echo "</div>";
 
         echo "</td>
     <td width=\"33%\">";
 
-        echo "<span class=\"roundRectDecor\">".$str."</span>";
+        echo "<span class=\"roundRectDecor\">".$strDescLast."</span>";
 
         echo "</td></tr>";
 
@@ -334,6 +313,18 @@ parsePostRequest();
     }
 
     ?>
+
+    <tr>
+        <td><?php echo "<span style=\"width:20px\" class=\"roundDecor\">".($i+1)."</span>"?></td>
+        <td><div style="font-size:150%;width: 100%;text-align: center">$<?php echo $strMatExLast; ?>$</div></td>
+        <td><span class="roundRectDecor"><?php echo $strDescCur; ?></span></td>
+    </tr>
+    <tr>
+        <td><?php echo "<span style=\"width:20px\" class=\"roundDecor\">".($i+2)."</span>"?></td>
+        <td><div style="font-size:150%;width: 100%;text-align: center">$<?php echo $LS->getFormattedTexCode(); ?>$</div></td>
+        <td><span class="roundRectDecor">Ergebnis aus Matrix ablesen</span></td>
+    </tr>
+
 </table>
 <hr style="width: 90%" class="separator">
 
