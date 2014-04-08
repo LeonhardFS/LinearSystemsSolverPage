@@ -170,10 +170,17 @@ function parsePostRequest() {
 </head>
 
 <body>
-<h1>Gleichungssystem $Ax=b$</h1>
 
-<h2>Schritt 1: Gleichung aufstellen</h2>
+<header>
+    <div class="centerit">
+        <p>
 
+        <span style="font-size: 34px">Gauß-Löser</span>
+        <br>
+        <span style="font-size: 20px">zur Lösung eines linearen Gleichungssystems $Ax=b$<span> </p></div>
+</header>
+
+<section id="main">
 <?php
 // generateNumbers if necessary
 if(!isset($_POST['a_11']))
@@ -183,9 +190,8 @@ if(!isset($_POST['a_11']))
 parsePostRequest();
 
 ?>
-<p>Hier ist der tolle Gauss Löser!</p>
+<p>Um Brüche $\frac{x}{y}$ einzugeben, tippe in die Felder einfach x / y. Aktuell werden leider nur rationale Zahlen unterstützt.</p>
 
-<span class="roundDecor">1</span>
 <p></p>
 <form name="les" method="post" action="<?php echo $_SERVER['PHP_SELF']?>">
 <table style="margin-left: auto;margin-right: auto">
@@ -334,6 +340,9 @@ parsePostRequest();
 <div class="solution">Lösung: <?php
     echo "$" . "L = " . $LS->getAffineSpaceTexString() . "$";?></div>
 
+</section>
 
+<footer>(c) 2014 by L.Spiegelberg | spiegelb (at) in (dot) tum (dot) de
+</footer>
 </body>
 </html>
