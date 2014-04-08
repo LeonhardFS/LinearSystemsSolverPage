@@ -23,6 +23,111 @@ function getNumberOf($name) {
         return $num;
     }
 }
+
+// encodes rational as x or x / y
+function rationalToStr($r) {
+    $r->reduce();
+    if($r->denominator == 1)
+    return strval($r->numerator);
+    else return strval($r->numerator)."/".strval($r->denominator);
+}
+
+// returns an error string, if conversion was not successful
+function strToRational($str, &$r) {
+    // split str by / char
+    $a = explode('/', $str);
+
+    if(count($a) > 2)return "Zur Eingabe von Brüchen ist höchstens ein '/' Zeichen erlaubt";
+
+    // only numbers allowed
+    foreach($a as &$val) {
+        $val=preg_replace("/[^0-9]/","",$val);
+    }
+
+    if(count($a) == 1) {
+
+
+        // simple case, only numerator
+        $r = new RationalNumber(intval($a[0]));
+    } else {
+        $r = new RationalNumber(0);
+
+        // division by zero?
+        if(intval($a[1]) == 0) {
+            return "Division durch 0 ist nicht definiert";
+        }
+        $r = new RationalNumber(intval($a[0]), intval($a[1]));
+    }
+
+    return "";
+}
+
+// sets all Post fields to some nice numbers (such that solution is nice ;) )
+// sets global n!
+function generateNumbers() {
+
+    global $n;
+
+    $n = 3;
+    $A = randMatrix($n); // nxn matrix
+    $x = randVector($n);
+
+    $b = transformVector($A, $x, $n);
+
+    // set post variables
+    for($i = 1; $i <= $n; $i++)
+        for($j = 1; $j <= $n; $j++) {
+            $str = 'a_'.$i.$j;
+            $_POST[$str] =  rationalToStr($A[$i - 1][$j - 1]);
+        }
+
+    for($i = 1; $i <= $n; $i++) {
+        $str = 'b_'.$i;
+        $_POST[$str] = rationalToStr($b[$i - 1]);
+    }
+}
+
+// parses all $POST variable a_ij, b_j
+// sets variables A, b, n in global scope!
+function parsePostRequest() {
+    global $A;
+    global $b;
+    global $n;
+
+    $max = 10;
+    // search for highest index set in Post => determines n
+    $index = 1;
+    while(isset($_POST['b_'.$index]) && $index < $max)$index++;
+    $n = $index - 1;
+
+    $errfound = false;
+    $errstr = "<div class=\"errSpace\"><h4>Fehler:</h4><hr><ul>";
+
+    for($i = 1; $i <= $n; $i++)
+        for($j = 1; $j <= $n; $j++) {
+            $str = 'a_'.$i.$j;
+            $estr = strToRational($_POST[$str], $A[$j - 1][$i - 1]);
+            if(strlen($estr) > 0)
+            {
+                $errstr .= "<li>\$a_{".$i.$j."}\$: ".$estr."</li>";
+                $errfound = true;
+            }
+        }
+
+    for($i = 1; $i <= $n; $i++) {
+        $str = 'b_'.$i;
+        $estr = strToRational($_POST[$str], $b[$i - 1]);
+        if(strlen($estr) > 0){
+            $errstr.="<li>".$estr."</li>";
+            $errfound = true;
+        }
+    }
+
+    $errstr .=  "</ul></div>";
+
+    if($errfound)echo $errstr;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -70,9 +175,16 @@ function getNumberOf($name) {
 <h2>Schritt 1: Gleichung aufstellen</h2>
 
 <?php
-if($formsend)echo "Form abgeschickt";
+// generateNumbers if necessary
+if(!isset($_POST['a_11']))
+    generateNumbers();
+
+// parse here the form
+parsePostRequest();
+
 ?>
 <p>Hier ist der tolle Gauss Löser!</p>
+
 <span class="roundDecor">1</span>
 <p></p>
 <form name="les" method="post" action="<?php echo $_SERVER['PHP_SELF']?>">
@@ -128,28 +240,18 @@ if($formsend)echo "Form abgeschickt";
 </table>
 </form>
 <p class="horzSpace"></p>
-<hr style="width: 90%">
+<hr style="width: 90%" class="separator">
 <p class="horzSpace"></p>
 <table style="min-width:300px;max-width:500px;margin-left: auto;margin-right: auto;margin-top: 20px">
     <?php
     // solve Gauss here
-    $n = 3;
+
 
     // load test case
-    loadTest1();
+    //loadTest1();
     //loadTest2();
     //loadTest3();
 
-    for($i = 1; $i <= 3; $i++)
-        for($j = 1; $j <= 3; $j++) {
-            $str = 'a_'.$i.$j;
-            $A[$j - 1][$i - 1] = new RationalNumber(intval($_POST[$str]));
-        }
-
-    for($i = 1; $i <= 3; $i++) {
-        $str = 'b_'.$i;
-        $b[$i - 1] = new RationalNumber(intval($_POST[$str]));
-    }
 
     $LS = new LinearSystem($n);
     $LS->A = $A;
@@ -227,7 +329,7 @@ if($formsend)echo "Form abgeschickt";
 
     ?>
 </table>
-<hr style="width: 90%">
+<hr style="width: 90%" class="separator">
 
 <div class="solution">Lösung: <?php
     echo "$" . "L = " . $LS->getAffineSpaceTexString() . "$";?></div>

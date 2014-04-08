@@ -127,7 +127,7 @@ input.vecClass {
     margin-bottom: 10px;
 }
 
-hr { display: block; height: 1px;
+.separator hr { display: block; height: 1px;
     border: 0; border-top: 1px solid #dddddd;
     padding: 0;
 margin-right: auto;
@@ -177,4 +177,33 @@ margin-bottom: 20px}
     border-width: 1px;
     border-color: #47aaca;
     border-style: solid;
+}
+
+.errSpace {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 6px;
+    padding: 10px;
+    display: block;
+    text-align: center;
+    vertical-align: middle;
+    background: #ffd1d5;
+    border-width: 1px;
+    border-color: #ca555e;
+    border-style: solid;
+}
+
+.errSpace hr {
+    display: block; height: 1px;
+    border: 0; border-top: 1px solid #ca555e;
+    padding: 0;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 20px;
+    margin-bottom: 20px
+}
+.errSpace ul {
+    text-indent: 0;
+    text-align: center;
 }
