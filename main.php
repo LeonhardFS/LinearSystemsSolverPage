@@ -6,6 +6,23 @@ include_once('tests.php');
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
+
+$formsend = false;
+// has the page been exercised via a form action?
+if(isset($_POST['submit'])) {
+    $formsend = true;
+}
+
+function getNumberOf($name) {
+    if(isset($_POST[$name]))
+        return $_POST[$name];
+    else {
+        $num = rand(0, 9);
+        $_POST[$name] = $num;
+        return $num;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -52,31 +69,33 @@ ini_set('display_errors', 1);
 
 <h2>Schritt 1: Gleichung aufstellen</h2>
 
+<?php
+if($formsend)echo "Form abgeschickt";
+?>
 <p>Hier ist der tolle Gauss Löser!</p>
 <span class="roundDecor">1</span>
 <p></p>
+<form name="les" method="post" action="<?php echo $_SERVER['PHP_SELF']?>">
 <table style="margin-left: auto;margin-right: auto">
     <tr>
         <td>
-            <form>
                 <table class="matrixDecor">
                     <tr>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
+                        <td><input type="text" name="a_11" value="<?php echo getNumberOf('a_11'); ?>"></td>
+                        <td><input type="text" name="a_12" value="<?php echo getNumberOf('a_12'); ?>"></td>
+                        <td><input type="text" name="a_13" value="<?php echo getNumberOf('a_13'); ?>"></td>
                     </tr>
                     <tr>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
+                        <td><input type="text" name="a_21" value="<?php echo getNumberOf('a_21'); ?>"></td>
+                        <td><input type="text" name="a_22" value="<?php echo getNumberOf('a_22'); ?>"></td>
+                        <td><input type="text" name="a_23" value="<?php echo getNumberOf('a_23'); ?>"></td>
                     </tr>
                     <tr>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
-                        <td><input type="text"></td>
+                        <td><input type="text" name="a_31" value="<?php echo getNumberOf('a_31'); ?>"></td>
+                        <td><input type="text" name="a_32" value="<?php echo getNumberOf('a_32'); ?>"></td>
+                        <td><input type="text" name="a_33" value="<?php echo getNumberOf('a_33'); ?>"></td>
                     </tr>
                 </table>
-            </form>
 
         </td>
         <td>$\cdot$</td>
@@ -92,21 +111,22 @@ ini_set('display_errors', 1);
         <td>
             <table class="matrixDecor">
                 <tr>
-                    <td><input type="text"></td>
+                    <td><input type="text" name="b_1" value="<?php echo getNumberOf('b_1'); ?>"></td>
                 </tr>
                 <tr>
-                    <td><input type="text"></td>
+                    <td><input type="text" name="b_2" value="<?php echo getNumberOf('b_2'); ?>"></td>
                 </tr>
                 <tr>
-                    <td><input type="text"></td>
+                    <td><input type="text" name="b_3" value="<?php echo getNumberOf('b_3'); ?>"></td>
                 </tr>
             </table>
         </td>
     </tr>
     <tr>
-        <td colspan="5" style="text-align: center"><input type="button" value="Lösen" class="buttonDecor"></td>
+        <td colspan="5" style="text-align: center"><input type="submit" value="Lösen" class="buttonDecor" name="submit"></td>
     </tr>
 </table>
+</form>
 <p class="horzSpace"></p>
 <hr style="width: 90%">
 <p class="horzSpace"></p>
@@ -119,6 +139,17 @@ ini_set('display_errors', 1);
     loadTest1();
     //loadTest2();
     //loadTest3();
+
+    for($i = 1; $i <= 3; $i++)
+        for($j = 1; $j <= 3; $j++) {
+            $str = 'a_'.$i.$j;
+            $A[$j - 1][$i - 1] = new RationalNumber(intval($_POST[$str]));
+        }
+
+    for($i = 1; $i <= 3; $i++) {
+        $str = 'b_'.$i;
+        $b[$i - 1] = new RationalNumber(intval($_POST[$str]));
+    }
 
     $LS = new LinearSystem($n);
     $LS->A = $A;
