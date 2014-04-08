@@ -316,7 +316,7 @@ parsePostRequest();
 
     <tr>
         <td><?php echo "<span style=\"width:20px\" class=\"roundDecor\">".($i+1)."</span>"?></td>
-        <td><div style="font-size:150%;width: 100%;text-align: center">$<?php echo $strMatExLast; ?>$</div></td>
+        <td><div style="font-size:150%;width: 100%;text-align: center">$<?php echo $strMatExCur; ?>$</div></td>
         <td><span class="roundRectDecor"><?php echo $strDescCur; ?></span></td>
     </tr>
     <?php
