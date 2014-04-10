@@ -150,8 +150,7 @@ function parsePostRequest() {
 
     </script>
     <!-- local copy !-->
-    <!--<script type="text/javascript" src="./MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    -->
+    <script type="text/javascript" src="./MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <!-- web copy !-->
     <script type="text/javascript"
             src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
@@ -255,9 +254,9 @@ parsePostRequest();
 
     // load test cases, if wished
     // loadTest1();
-    //loadTest2();
-    //loadTest3();
-
+    // loadTest2();
+    // loadTest3();
+    // loadTest4();
 
     $LS = new LinearSystem($n);
     $LS->A = $A;
@@ -321,7 +320,7 @@ parsePostRequest();
     </tr>
     <?php
         // print last info if necessary
-        if(strpos($strDescCur, 'Ergebnis') === false) {
+        if(strpos($strDescCur, 'Ergebnis') === false && $LS->existsSolution()) {
             echo "<tr><td><span style=\"width:20px\" class=\"roundDecor\">".($i+2)."</span></td>
     <td><div style=\"font-size:150%;width: 100%;text-align: center\">\$".$LS->getFormattedTexCode()."\$</div></td>
     <td><span class=\"roundRectDecor\">Ergebnis aus Matrix ablesen</span></td></tr>";

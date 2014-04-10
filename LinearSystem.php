@@ -113,6 +113,7 @@ class LinearSystem
     private $lCurIndex; // current Index for free parameter at R Matrix
     private $varNames; // string array, to name variables which are introduced if rk A < n!
     private $maxVarNames; // number of var names
+    private $existsSolution; // empty set?
 
     // constants for modes
     private $mode;
@@ -169,6 +170,9 @@ class LinearSystem
         for ($j = 0; $j < $this->n; $j++) {
             $this->R[$this->n][$j] = new RationalNumber(0);
         }
+
+        // set existsSolution to true(default mode)
+        $this->existsSolution = true;
     }
 
     function solveWithGauss()
@@ -199,6 +203,10 @@ class LinearSystem
     public function finished()
     {
         return $this->finished;
+    }
+
+    public  function existsSolution() {
+        return $this->existsSolution;
     }
 
     private function swapRows($a, $b)
@@ -340,18 +348,29 @@ class LinearSystem
             // is element A_cc 0?
             if ($this->A[$this->c][$this->c]->numerator == 0) {
 
-                // now introduce new variable and set entry in matrix A to 0
-                // don't forget to set in the next zero column corresponding line to 1!
-                $this->A[$this->c][$this->c] = new RationalNumber(1);
+                // is b also 0?
+                if($this->b[$this->c]->numerator == 0) {
+                    // now introduce new variable and set entry in matrix A to 0
+                    // don't forget to set in the next zero column corresponding line to 1!
+                    $this->A[$this->c][$this->c] = new RationalNumber(1);
 
-                // set R
-                $this->R[$this->lCurIndex][$this->c] = new RationalNumber(1);
+                    // set R
+                    $this->R[$this->lCurIndex][$this->c] = new RationalNumber(1);
 
-                if ($this->lCurIndex - 1 < $this->maxVarNames)
-                    $str = "Nullzeile, führe neue Variable $" . $this->varNames[$this->lCurIndex - 1] . " \\in \\mathbb{R}$ ein";
-                else $str = "error";
+                    if ($this->lCurIndex - 1 < $this->maxVarNames)
+                        $str = "Nullzeile, führe neue Variable $" . $this->varNames[$this->lCurIndex - 1] . " \\in \\mathbb{R}$ ein";
+                    else $str = "error";
 
-                $this->lCurIndex++;
+                    $this->lCurIndex++;
+                }
+                else {
+                    // there's a contradiction => 1 = 0
+                    // => no solution
+                    $str = "Widerspruch in Zeile $\\text{".toRoman($this->c + 1)."}$, es gibt keine Lösung";
+                    $this->finished = true;
+                    $this->existsSolution = false;
+                }
+
             } else {
                 // go through all elements in row with r as counter
 
@@ -466,6 +485,10 @@ class LinearSystem
     public function getAffineSpaceTexString()
     {
         $str = "";
+
+        // special case, solution is empty set
+        if(!$this->existsSolution())
+            return "\\emptyset";
 
         // go through solution array R
         for ($col = 0; $col < $this->n + 1; $col++) {

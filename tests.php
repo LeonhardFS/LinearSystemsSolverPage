@@ -157,4 +157,55 @@ function loadTest3()
     $R[3][2] = new RationalNumber(0);
 }
 
+// no solution
+function loadTest4()
+{
+    global $A;
+    global $b;
+    global $R;
+
+    // 3rd test case, solution is R^3
+    // Test matrix: 0 0 0 * (t)    = 0
+    //              0 0 0 * (s)    = 0
+    //              0 0 0 * (r)    = 1
+
+    // <-> solution: R^3
+    $A[0][0] = new RationalNumber(0); // first column
+    $A[0][1] = new RationalNumber(0);
+    $A[0][2] = new RationalNumber(0);
+
+    // second column zero
+    $A[1][0] = new RationalNumber(0); // second column
+    $A[1][1] = new RationalNumber(0);
+    $A[1][2] = new RationalNumber(0);
+
+    // third column zero
+    $A[2][0] = new RationalNumber(0); // third column
+    $A[2][1] = new RationalNumber(0);
+    $A[2][2] = new RationalNumber(0);
+
+    // b
+    $b[0] = new RationalNumber(0);
+    $b[1] = new RationalNumber(0);
+    $b[2] = new RationalNumber(1);
+
+    $R[0][0] = new RationalNumber(0); // first column
+    $R[0][1] = new RationalNumber(0);
+    $R[0][2] = new RationalNumber(0);
+
+    // second column zero
+    $R[1][0] = new RationalNumber(0); // second column
+    $R[1][1] = new RationalNumber(0);
+    $R[1][2] = new RationalNumber(1);
+
+    // third column zero
+    $R[2][0] = new RationalNumber(0); // third column
+    $R[2][1] = new RationalNumber(1);
+    $R[2][2] = new RationalNumber(0);
+
+    // fourth column zero
+    $R[3][0] = new RationalNumber(1); // fourth column
+    $R[3][1] = new RationalNumber(0);
+    $R[3][2] = new RationalNumber(0);
+}
 ?>
