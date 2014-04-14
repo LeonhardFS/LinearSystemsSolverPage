@@ -165,19 +165,6 @@ input.vecClass {
     background-color: #800020;
 }
 
-.m_1x1 {
-    background-image: url("img/1xn_l.png"), url("img/1xn_r.png");
-    background-position: left, right;
-    padding: 8px;
-    background-size: cover;
-    font: 16px;
-}
-
-.m_nxn {
- background:    url("img/nxn_tl.png") no-repeat left top ,
-                url("img/nxn_bl.png") no-repeat left bottom;
-}
-
 .horzSpace {
     margin-top: 10px;
     margin-bottom: 10px;
