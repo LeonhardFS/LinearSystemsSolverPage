@@ -281,7 +281,7 @@ class LinearSystem
                         // swap
                         $found = true;
 
-                        $str .= "tausche Reihe " . toRoman($this->c + 1) . " mit Reihe " . toRoman($k + 1);
+                        $str .= "tausche Zeile " . toRoman($this->c + 1) . " mit Zeile " . toRoman($k + 1);
 
                         $this->swapRows($k, $this->c);
 
@@ -440,6 +440,9 @@ class LinearSystem
 
         for ($i = 0; $i < $this->n; $i++) {
             for ($j = 0; $j < $this->n; $j++) {
+                // reduce first
+                $this->A[$j][$i]->reduce();
+
                 $str .= $this->A[$j][$i];
                 $str .= " & ";
                 if ($j == $this->n - 1) {
@@ -450,6 +453,9 @@ class LinearSystem
 
                     // go through all vars introduced for zero rows
                     for ($k = 1; $k < $this->n + 1; $k++) {
+                        // reduce first
+                        $this->R[$k][$i]->reduce();
+
                         if ($this->R[$k][$i]->numerator <> 0) // numerator != 0
                             if ($this->R[$k][$i]->isNegative()) // negative? no + sign necessary
                                 $str .= $this->R[$k][$i] . $this->varNames[$k - 1];
