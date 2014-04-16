@@ -173,18 +173,18 @@ function parsePostRequest() {
                 {
                     var str = "";
                     for(var i = 1; i <= matRows.length; i++) {
-                        $("#inMatA tr:nth-child(" + i + ") td:last").after("<td><input type=\"text\" name=\"a_"+i+matRows+"\" value=\"0\"></td>");
-                        str += "<td><input type=\"text\" name=\"a_"+matRows+i+"\" value=\"0\"></td>";
+                        $("#inMatA tr:nth-child(" + i + ") td:last").after("<td><input type=\"text\" name=\"a_"+i+(matRows.length+1)+"\" value=\"0\"></td>");
+                        str += "<td><input type=\"text\" name=\"a_"+(matRows.length+1)+i+"\" value=\"0\"></td>";
                     }
                     // one more for the nxn element
-                    str += "<td><input type=\"text\" name=\"a_"+matRows+matRows+"\" value=\"1\"></td>";
+                    str += "<td><input type=\"text\" name=\"a_"+(matRows.length+1)+(matRows.length+1)+"\" value=\"1\"></td>";
                     $("#inMatA tr:last").after("<tr>"+str+"</tr>");
 
                     // x vector
                     $("#inVecX tr:last").after("<tr><td><div style=\"font-size: 125%;width: 40px;height: 20px;text-align: center;\">$x_{" + (matRows.length + 1) + "}$</div></td></tr>");
 
                     // b vector
-                    $("#inVecB tr:last").after("<tr><td><input type=\"text\" name=\"a_"+i+matRows+"\" value=\"0\"></td></tr>");
+                    $("#inVecB tr:last").after("<tr><td><input type=\"text\" name=\"b_"+(matRows.length + 1)+"\" value=\"0\"></td></tr>");
 
 
                     // typeset table
