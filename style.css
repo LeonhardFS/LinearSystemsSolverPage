@@ -252,3 +252,25 @@ margin-bottom: 20px}
     text-indent: 0;
     text-align: center;
 }
+
+.roundButton {
+    border-radius: 50%;
+    border-width: 1px;
+    border-color: #d0d0d0;
+    border-style: solid;
+    background-color: #f8f8f8;
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 0px; /*hard coded correction for hr margin*/
+    font-weight: bold;
+}
+
+.roundButton:hover {
+    border-color: #47aaca;
+    border-style: solid;
+    box-shadow: 0px 0px 8px 0px #47aaca;
+    background-color: #d3e9eb;
+}

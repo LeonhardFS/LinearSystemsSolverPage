@@ -141,7 +141,7 @@ function parsePostRequest() {
     </style>
 
     <!-- include jQuery from web source!-->
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
     <!-- configuring MathJax to allow inline TexSyntax !-->
     <script type="text/x-mathjax-config">
@@ -161,9 +161,75 @@ function parsePostRequest() {
     <script>
         $(document).ready(function(){
 
+            var maxRows = 9;
+
             // do here the magic
+            $("input[name*='addDim']").click(function() {
+                $("#inMatA tr:last").css("background-color", "#ff00ff");
+                //$('#inMatA tr:last').after('<tr>Test</tr>');
+
+                var matRows = $('#inMatA tr');
+                if(matRows.length < maxRows)
+                {
+                    var str = "";
+                    for(var i = 1; i <= matRows.length; i++) {
+                        $("#inMatA tr:nth-child(" + i + ") td:last").after("<td><input type=\"text\" name=\"a_"+i+matRows+"\" value=\"0\"></td>");
+                        str += "<td><input type=\"text\" name=\"a_"+matRows+i+"\" value=\"0\"></td>";
+                    }
+                    // one more for the nxn element
+                    str += "<td><input type=\"text\" name=\"a_"+matRows+matRows+"\" value=\"1\"></td>";
+                    $("#inMatA tr:last").after("<tr>"+str+"</tr>");
+
+                    // x vector
+                    $("#inVecX tr:last").after("<tr><td><div style=\"font-size: 125%;width: 40px;height: 20px;text-align: center;\">$x_{" + (matRows.length + 1) + "}$</div></td></tr>");
+
+                    // b vector
+                    $("#inVecB tr:last").after("<tr><td><input type=\"text\" name=\"a_"+i+matRows+"\" value=\"0\"></td></tr>");
 
 
+                    // typeset table
+                    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+
+                    // hide if 8
+                    if(matRows.length === maxRows - 1) {
+                        $(this).hide();
+                    }
+                    // show if > 0
+                    if(matRows.length > 0) $("input[name*='remDim']").show();
+                }
+            });
+
+            $("input[name*='remDim']").click(function() {
+                $("#inMatA tr:last").css("background-color", "#ff00ff");
+                //$('#inMatA tr:last').after('<tr>Test</tr>');
+
+                var matRows = $('#inMatA tr');
+                    var str = "";
+                    for(var i = 1; i <= matRows.length; i++) {
+                        $("#inMatA tr:nth-child(" + i + ") td:last").remove();
+                        str += "<td>row</td>";
+                    }
+                    // one more for the nxn element
+                    str += "<td>row</td>";
+                    $("#inMatA tr:last").remove();
+
+                    // x vector
+                    $("#inVecX tr:last").remove();
+                    // b vector
+                    $("#inVecB tr:last").remove();
+
+
+                    // typeset table
+                    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+
+                    // hide if 1
+                    if(matRows.length === 2) {
+                        $(this).hide();
+                    }
+                    // show
+                    if(matRows.length < maxRows + 1) $("input[name*='addDim']").show();
+
+            });
         });
     </script>
 </head>
@@ -193,10 +259,10 @@ parsePostRequest();
 
 <p></p>
 <form name="les" method="post" action="<?php echo $_SERVER['PHP_SELF']?>">
-<table style="margin-left: auto;margin-right: auto">
+<table style="margin-left: auto;margin-right: auto" border="1px">
     <tr>
         <td>
-                <table class="matrixDecor">
+                <table class="matrixDecor" id="inMatA">
                     <tr>
                         <td><input type="text" name="a_11" value="<?php echo getNumberOf('a_11'); ?>"></td>
                         <td><input type="text" name="a_12" value="<?php echo getNumberOf('a_12'); ?>"></td>
@@ -218,7 +284,7 @@ parsePostRequest();
         <td>$\cdot$</td>
         <td>
 <!--                $\left( \begin{array}{c} x_1 \\ x_2 \\ x_3 \end{array} \right)$-->
-            <table style="height: auto" class="matrixDecor">
+            <table style="height: auto" class="matrixDecor" id="inVecX">
                 <tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center;">$x_1$</div></td></tr>
                 <tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center">$x_2$</div></td></tr>
                 <tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center">$x_3$</div></td></tr>
@@ -226,7 +292,7 @@ parsePostRequest();
         </td>
         <td>=</td>
         <td>
-            <table class="matrixDecor">
+            <table class="matrixDecor" id="inVecB">
                 <tr>
                     <td><input type="text" name="b_1" value="<?php echo getNumberOf('b_1'); ?>"></td>
                 </tr>
@@ -240,7 +306,11 @@ parsePostRequest();
         </td>
     </tr>
     <tr>
-        <td colspan="5" style="text-align: center"><input type="submit" value="Lösen" class="buttonDecor" name="submit"></td>
+        <td colspan="5" style="text-align: center">
+            <input type="submit" value="Lösen" class="buttonDecor" name="submit" style="margin-right: 40px">
+            <input type="button" name="addDim" value="+" class="roundButton">
+            <input type="button" name="remDim" value="-" class="roundButton">
+        </td>
     </tr>
 </table>
 </form>
