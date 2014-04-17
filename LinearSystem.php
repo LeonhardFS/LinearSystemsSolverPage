@@ -267,6 +267,13 @@ class LinearSystem
     {
         $str = "";
 
+        // fix for 1x1 matrix
+        if($this->n == 1) {
+            $this->mode = LinearSystem::MODE_SECOND;
+            $this->r = 0;
+            $this->c = 0;
+        }
+
         // first: differ between two modes!
         // first mode is reducing Matrix to row column form
         // second mode is substituion, precisely solving an upper triangular matrix
@@ -386,7 +393,7 @@ class LinearSystem
                         $str = "kürzen, rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "}  : " . $this->A[$this->r][$this->c]->toTexWithBrackets() . "$";
 
                         // go through R
-                        for ($i = 0; $i < $this->n - 1; $i++) {
+                        for ($i = 0; $i <= $this->n - 1; $i++) { // fix for 1x1 matrix!
                             $this->R[$i][$this->c] = rdivide($this->R[$i][$this->r], $this->A[$this->c][$this->r]);
 
                             //reduce

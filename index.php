@@ -373,7 +373,7 @@ parsePostRequest();
 <hr style="width: 90%" class="separator">
 
 <div class="solution">
-    Lösung:<?php echo "$" . "L = " . $LS->getAffineSpaceTexString() . "$";?>
+    Lösung: <?php echo "$" . "L = " . $LS->getAffineSpaceTexString() . "$";?>
 </div>
 </section>
 
