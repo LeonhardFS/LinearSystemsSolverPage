@@ -68,7 +68,7 @@ function generateNumbers() {
 
     global $n;
 
-    $n = 3;
+    $n = 2;
     $A = randMatrix($n); // nxn matrix
     $x = randVector($n);
 
@@ -165,8 +165,6 @@ function parsePostRequest() {
 
             // do here the magic
             $("input[name*='addDim']").click(function() {
-                $("#inMatA tr:last").css("background-color", "#ff00ff");
-                //$('#inMatA tr:last').after('<tr>Test</tr>');
 
                 var matRows = $('#inMatA tr');
                 if(matRows.length < maxRows)
@@ -200,8 +198,6 @@ function parsePostRequest() {
             });
 
             $("input[name*='remDim']").click(function() {
-                $("#inMatA tr:last").css("background-color", "#ff00ff");
-                //$('#inMatA tr:last').after('<tr>Test</tr>');
 
                 var matRows = $('#inMatA tr');
                     var str = "";
@@ -263,21 +259,31 @@ parsePostRequest();
     <tr>
         <td>
                 <table class="matrixDecor" id="inMatA">
-                    <tr>
-                        <td><input type="text" name="a_11" value="<?php echo getNumberOf('a_11'); ?>"></td>
-                        <td><input type="text" name="a_12" value="<?php echo getNumberOf('a_12'); ?>"></td>
-                        <td><input type="text" name="a_13" value="<?php echo getNumberOf('a_13'); ?>"></td>
+                    <?php
+                        // generate matrix content
+                        for($i = 0; $i < $n; $i++) {
+                            echo "<tr>";
+                                for($j = 0; $j < $n; $j++) {
+                                    echo "<td><input type=\"text\" name=\"a_".($i+1).($j+1)."\" value=\"".getNumberOf("a_".($i+1).($j+1))."\"></td>";
+                                }
+                            echo "</tr>";
+                        }
+                    ?>
+                    <!--<tr>
+                        <td><input type="text" name="a_11" value="<?php /*echo getNumberOf('a_11'); */?>"></td>
+                        <td><input type="text" name="a_12" value="<?php /*echo getNumberOf('a_12'); */?>"></td>
+                        <td><input type="text" name="a_13" value="<?php /*echo getNumberOf('a_13'); */?>"></td>
                     </tr>
                     <tr>
-                        <td><input type="text" name="a_21" value="<?php echo getNumberOf('a_21'); ?>"></td>
-                        <td><input type="text" name="a_22" value="<?php echo getNumberOf('a_22'); ?>"></td>
-                        <td><input type="text" name="a_23" value="<?php echo getNumberOf('a_23'); ?>"></td>
+                        <td><input type="text" name="a_21" value="<?php /*echo getNumberOf('a_21'); */?>"></td>
+                        <td><input type="text" name="a_22" value="<?php /*echo getNumberOf('a_22'); */?>"></td>
+                        <td><input type="text" name="a_23" value="<?php /*echo getNumberOf('a_23'); */?>"></td>
                     </tr>
                     <tr>
-                        <td><input type="text" name="a_31" value="<?php echo getNumberOf('a_31'); ?>"></td>
-                        <td><input type="text" name="a_32" value="<?php echo getNumberOf('a_32'); ?>"></td>
-                        <td><input type="text" name="a_33" value="<?php echo getNumberOf('a_33'); ?>"></td>
-                    </tr>
+                        <td><input type="text" name="a_31" value="<?php /*echo getNumberOf('a_31'); */?>"></td>
+                        <td><input type="text" name="a_32" value="<?php /*echo getNumberOf('a_32'); */?>"></td>
+                        <td><input type="text" name="a_33" value="<?php /*echo getNumberOf('a_33'); */?>"></td>
+                    </tr>-->
                 </table>
 
         </td>
@@ -285,23 +291,37 @@ parsePostRequest();
         <td>
 <!--                $\left( \begin{array}{c} x_1 \\ x_2 \\ x_3 \end{array} \right)$-->
             <table style="height: auto" class="matrixDecor" id="inVecX">
-                <tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center;">$x_1$</div></td></tr>
+                <!--<tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center;">$x_1$</div></td></tr>
                 <tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center">$x_2$</div></td></tr>
-                <tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center">$x_3$</div></td></tr>
+                <tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center">$x_3$</div></td></tr>-->
+                <?php
+                    for($i = 0; $i < $n; $i++) {
+                        echo "<tr><td><div style=\"font-size: 125%;width: 40px;height: 20px;text-align: center;\">\$x_".($i+1)."\$</div></td></tr>";
+                    }
+                ?>
             </table>
         </td>
         <td>=</td>
         <td>
             <table class="matrixDecor" id="inVecB">
-                <tr>
-                    <td><input type="text" name="b_1" value="<?php echo getNumberOf('b_1'); ?>"></td>
+                <?php
+                for($i = 0; $i < $n; $i++) {
+                    $bstr = "b_".($i+1);
+                    echo "<tr>";
+                    echo "<td><input type=\"text\" name=\"".$bstr."\" value=\"".getNumberOf($bstr)."\"></td>";
+                    echo "</tr>";
+                }
+                ?>
+
+                <!--<tr>
+                    <td><input type="text" name="b_1" value="<?php /*echo getNumberOf('b_1'); */?>"></td>
                 </tr>
                 <tr>
-                    <td><input type="text" name="b_2" value="<?php echo getNumberOf('b_2'); ?>"></td>
+                    <td><input type="text" name="b_2" value="<?php /*echo getNumberOf('b_2'); */?>"></td>
                 </tr>
                 <tr>
-                    <td><input type="text" name="b_3" value="<?php echo getNumberOf('b_3'); ?>"></td>
-                </tr>
+                    <td><input type="text" name="b_3" value="<?php /*echo getNumberOf('b_3'); */?>"></td>
+                </tr>-->
             </table>
         </td>
     </tr>
@@ -378,7 +398,7 @@ parsePostRequest();
 
 
         // securing
-        if ($i > 15) break;
+        if ($i > 100) break;
     }
 
     ?>
