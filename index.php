@@ -68,7 +68,7 @@ function generateNumbers() {
 
     global $n;
 
-    $n = 2;
+    $n = 3; // set here number for default count, 3x3 is common => use it!
     $A = randMatrix($n); // nxn matrix
     $x = randVector($n);
 
@@ -255,7 +255,7 @@ parsePostRequest();
 
 <p></p>
 <form name="les" method="post" action="<?php echo $_SERVER['PHP_SELF']?>">
-<table style="margin-left: auto;margin-right: auto" border="1px">
+<table style="margin-left: auto;margin-right: auto">
     <tr>
         <td>
                 <table class="matrixDecor" id="inMatA">
@@ -269,32 +269,13 @@ parsePostRequest();
                             echo "</tr>";
                         }
                     ?>
-                    <!--<tr>
-                        <td><input type="text" name="a_11" value="<?php /*echo getNumberOf('a_11'); */?>"></td>
-                        <td><input type="text" name="a_12" value="<?php /*echo getNumberOf('a_12'); */?>"></td>
-                        <td><input type="text" name="a_13" value="<?php /*echo getNumberOf('a_13'); */?>"></td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="a_21" value="<?php /*echo getNumberOf('a_21'); */?>"></td>
-                        <td><input type="text" name="a_22" value="<?php /*echo getNumberOf('a_22'); */?>"></td>
-                        <td><input type="text" name="a_23" value="<?php /*echo getNumberOf('a_23'); */?>"></td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="a_31" value="<?php /*echo getNumberOf('a_31'); */?>"></td>
-                        <td><input type="text" name="a_32" value="<?php /*echo getNumberOf('a_32'); */?>"></td>
-                        <td><input type="text" name="a_33" value="<?php /*echo getNumberOf('a_33'); */?>"></td>
-                    </tr>-->
                 </table>
 
         </td>
         <td>$\cdot$</td>
         <td>
-<!--                $\left( \begin{array}{c} x_1 \\ x_2 \\ x_3 \end{array} \right)$-->
             <table style="height: auto" class="matrixDecor" id="inVecX">
-                <!--<tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center;">$x_1$</div></td></tr>
-                <tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center">$x_2$</div></td></tr>
-                <tr><td><div style="font-size: 125%;width: 40px;height: 20px;text-align: center">$x_3$</div></td></tr>-->
-                <?php
+               <?php
                     for($i = 0; $i < $n; $i++) {
                         echo "<tr><td><div style=\"font-size: 125%;width: 40px;height: 20px;text-align: center;\">\$x_".($i+1)."\$</div></td></tr>";
                     }
@@ -312,16 +293,6 @@ parsePostRequest();
                     echo "</tr>";
                 }
                 ?>
-
-                <!--<tr>
-                    <td><input type="text" name="b_1" value="<?php /*echo getNumberOf('b_1'); */?>"></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="b_2" value="<?php /*echo getNumberOf('b_2'); */?>"></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="b_3" value="<?php /*echo getNumberOf('b_3'); */?>"></td>
-                </tr>-->
             </table>
         </td>
     </tr>
@@ -353,16 +324,13 @@ parsePostRequest();
     $LS->b = $b;
     $LS->initGauss();
 
-
-    $i = 0;
-
-
     // we always have secured two steps
     $strMatExCur = $LS->getFormattedTexCode();
     $strDescCur = $LS->gaussStep();
     $strMatExLast = $strMatExCur;
     $strDescLast = $strDescCur;
 
+    $i = 0; // counter for display & security use
     $fin = $LS->finished();
     while ($LS->finished() <> true) {
 
@@ -373,34 +341,19 @@ parsePostRequest();
         $strMatExCur = $LS->getFormattedTexCode();
         $strDescCur = $LS->gaussStep();
 
-
-
-        echo "
-  <tr>
-    <td>";
-
+        echo "<tr><td>";
         echo "<span style=\"width:20px\" class=\"roundDecor\">".$i."</span>";
-
-        echo "</td>
-    <td>";
-
+        echo "</td><td>";
         echo "<div style=\"font-size: 150%;width: 100%;text-align: center\">";
-
         echo "$" .$strMatExLast. "$";
         echo "</div>";
-
-        echo "</td>
-    <td width=\"33%\">";
-
+        echo "</td><td width=\"33%\">";
         echo "<span class=\"roundRectDecor\">".$strDescLast."</span>";
-
         echo "</td></tr>";
-
 
         // securing
         if ($i > 100) break;
     }
-
     ?>
 
     <tr>
@@ -416,13 +369,12 @@ parsePostRequest();
     <td><span class=\"roundRectDecor\">Ergebnis aus Matrix ablesen</span></td></tr>";
         }
     ?>
-
 </table>
 <hr style="width: 90%" class="separator">
 
-<div class="solution">Lösung: <?php
-    echo "$" . "L = " . $LS->getAffineSpaceTexString() . "$";?></div>
-
+<div class="solution">
+    Lösung:<?php echo "$" . "L = " . $LS->getAffineSpaceTexString() . "$";?>
+</div>
 </section>
 
 <footer>(c) 2014 by L.Spiegelberg | spiegelb (at) in (dot) tum (dot) de
