@@ -129,7 +129,7 @@ function tokenize($str) {
 </head>
 <body>
 <?php
-    tokenize("2.09+-3.847*6*-7/8+2/(4+7)");
+    tokenize("2.09+-3.847*6.095657*-7/8+2/(4+7)");
     //tokenize("2+3*6*7/8+2*(4+7)");
 ?>
 </body>
