@@ -16,7 +16,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // class to hold a token
-class Token {
+class Token
+{
     public $data;
     public $type;
 
@@ -33,49 +34,83 @@ class Token {
     }
 }
 
-function isOperator($str) {
+function isOperator($str)
+{
     $pos = 0;
-    if(strlen($str) > 1)return false;
+    if (strlen($str) > 1) return false;
     return $str{$pos} == '+' || $str{$pos} == '-' || $str{$pos} == '*' || $str{$pos} == '/' || $str{$pos} == '(' || $str{$pos} == ')';
 }
-function regmatch($str, $pattern) {
+
+function isNumber($str)
+{
+    return regmatch($str, "#[-+]?([0-9]*\.[0-9]+|[0-9]+)#");
+}
+
+function regmatch($str, $pattern)
+{
     $matches = array();
-    if(preg_match($pattern, $str, $matches))
-    return strlen($matches[0]) == strlen($str);
+    if (preg_match($pattern, $str, $matches))
+        return strlen($matches[0]) == strlen($str);
     else return false;
 }
 
-function tokenize($str) {
-    //regmatch($curstr, "#[-+]?([0-9]*\.[0-9]+|[0-9]+)#")
+// inserts * operators to solve mathematical abbreviations like 2(3+4) and (3+4)5
+function insertMultOps($token_list)
+{
+    $out_list = array();
+    array_push($out_list, $token_list[0]);
 
+    $pos = 1;
+    while ($pos < count($token_list)) {
+
+        if (strcmp($token_list[$pos], "(") == 0) {
+            // check if token before is ) or a number. If so, insert * op!
+            if (strcmp($token_list[$pos - 1], ")") == 0 || isNumber($token_list[$pos - 1])) {
+                array_push($out_list, "*");
+            }
+        }
+
+        if (isNumber($token_list[$pos]) && strcmp($token_list[$pos - 1], ")") == 0) {
+            array_push($out_list, "*");
+        }
+        // add token to output
+        array_push($out_list, $token_list[$pos]);
+
+        $pos++;
+    }
+    return $out_list;
+}
+
+// returns array of tokens in str format
+function tokenize($str)
+{
     $token_list = array();
     // go through string and match longest reg expr
     $pos = 0;
     $length = 1;
     $match = null;
     $lasttokenisnumber = false;
-    while($pos <= strlen($str)) {
-        for($j = 1; $j <= strlen($str) - $pos; $j++) {
+    while ($pos <= strlen($str)) {
+        for ($j = 1; $j <= strlen($str) - $pos; $j++) {
             $curstr = substr($str, $pos, $j);
-            if(isOperator($curstr)) {
+            if (isOperator($curstr)) {
                 $match = $curstr;
                 $length = $j;
             }
-            if(!$lasttokenisnumber && regmatch($curstr, "#[-+]?([0-9]*\.[0-9]+|[0-9]+)#")) {
+            if (!$lasttokenisnumber && isNumber($curstr)) {
                 $match = $curstr;
                 $length = $j;
             }
         }
 
         $pos += $length;
-        if($match) {
+        if ($match) {
             // no match, save token
-            echo "adding token: ".$match;
             array_push($token_list, $match);
             $length = 1;
 
             // is token a number?
-            if(isOperator($match))$lasttokenisnumber = false;
+            if (isOperator($match)) $lasttokenisnumber = false;
             else $lasttokenisnumber = true;
 
             $match = null;
@@ -83,18 +118,22 @@ function tokenize($str) {
     }
 
     // add last token...
-    if($match) {
-        echo "adding token: ".$match;
+    if ($match) {
         array_push($token_list, $match);
     }
 
 
-    // todo correct list of tokens, i.e. special case 2(3+4)
+    // insert * ops where necessary
+    $token_list = insertMultOps($token_list);
 
-    // print out tokens
+    return $token_list;
+}
+
+function print_list($list) {
+    // print out list items
     echo "<ul>";
-    for($i = 0; $i < count($token_list); $i++) {
-        echo "<li>".$token_list[$i]."</li>";
+    for ($i = 0; $i < count($list); $i++) {
+        echo "<li>" . $list[$i] . "</li>";
     }
     echo "</ul>";
 }
@@ -119,6 +158,7 @@ function tokenize($str) {
   MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 
 
+
     </script>
     <!-- local copy !-->
     <script type="text/javascript" src="./MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -129,8 +169,12 @@ function tokenize($str) {
 </head>
 <body>
 <?php
-    tokenize("2.09+-3.847*6.095657*-7/8+2/(4+7)");
-    //tokenize("2+3*6*7/8+2*(4+7)");
+
+$t_list = tokenize("(3+4)2(3*5+8/6)(7)8(9)");
+//tokenize("2.09+-3.847*6.095657*-7/8+2/(4+7)");
+//tokenize("2+3*6*7/8+2*(4+7)");
+print_list($t_list);
+
 ?>
 </body>
 </html>
