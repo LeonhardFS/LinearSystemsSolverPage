@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Leonhard Franz
- * Date: 29.04.14
- * Time: 22:45
- */
 
-
+include_once('Stack.php');
 include_once('LinearSystem.php');
 include_once('RationalNumber.php');
 include_once('math.php');
@@ -38,7 +32,14 @@ function isOperator($str)
 {
     $pos = 0;
     if (strlen($str) > 1) return false;
-    return $str{$pos} == '+' || $str{$pos} == '-' || $str{$pos} == '*' || $str{$pos} == '/' || $str{$pos} == '(' || $str{$pos} == ')';
+    return $str{$pos} == '+' || $str{$pos} == '-' || $str{$pos} == '~' || $str{$pos} == '#' || $str{$pos} == '*' || $str{$pos} == '/' || $str{$pos} == '^';
+}
+
+function isOperatorOrParentheses($str)
+{
+    $pos = 0;
+    if (strlen($str) > 1) return false;
+    return $str{$pos} == '+' || $str{$pos} == '-' || $str{$pos} == '~' || $str{$pos} == '#' || $str{$pos} == '*' || $str{$pos} == '/' || $str{$pos} == '(' || $str{$pos} == ')';
 }
 
 function isNumber($str)
@@ -73,6 +74,7 @@ function insertMultOps($token_list)
         if (isNumber($token_list[$pos]) && strcmp($token_list[$pos - 1], ")") == 0) {
             array_push($out_list, "*");
         }
+
         // add token to output
         array_push($out_list, $token_list[$pos]);
 
@@ -90,11 +92,22 @@ function tokenize($str)
     $length = 1;
     $match = null;
     $lasttokenisnumber = false;
+    $lasttokenisoperator = false;
     while ($pos <= strlen($str)) {
         for ($j = 1; $j <= strlen($str) - $pos; $j++) {
             $curstr = substr($str, $pos, $j);
-            if (isOperator($curstr)) {
+            if (isOperatorOrParentheses($curstr)) {
+
+                // check for unary -
+                // as two following operators are not allowed except for unary ones (+,-)
+                // use internally special symbols for it
+                // # for unary +, ~ for unary -
                 $match = $curstr;
+                if($lasttokenisoperator) {
+                   if(0 == strcmp($curstr, '+'))$match = "#";
+                   if(0 == strcmp($curstr, '-'))$match = "~";
+                }
+
                 $length = $j;
             }
             if (!$lasttokenisnumber && isNumber($curstr)) {
@@ -110,8 +123,11 @@ function tokenize($str)
             $length = 1;
 
             // is token a number?
-            if (isOperator($match)) $lasttokenisnumber = false;
+            if (isOperatorOrParentheses($match)) $lasttokenisnumber = false;
             else $lasttokenisnumber = true;
+
+            if(isOperator($match))$lasttokenisoperator = true;
+            else $lasttokenisoperator = false;
 
             $match = null;
         }
@@ -129,13 +145,171 @@ function tokenize($str)
     return $token_list;
 }
 
-function print_list($list) {
+function print_list($list)
+{
     // print out list items
     echo "<ul>";
     for ($i = 0; $i < count($list); $i++) {
         echo "<li>" . $list[$i] . "</li>";
     }
     echo "</ul>";
+}
+
+// is token separator sign? ==> accept , ; as separators!
+function isSeparator($str)
+{
+    return 0 == strcmp($str, ",") || 0 == strcmp($str, ";");
+}
+
+function isLeftAssociative($op) {
+    if(0 == strcmp($op, "+"))return true;
+    if(0 == strcmp($op, "-"))return true;
+    if(0 == strcmp($op, "*"))return true;
+    if(0 == strcmp($op, "/"))return true;
+    if(0 == strcmp($op, "^"))return false;
+    return false;
+}
+
+function precedence($op) {
+    if(0 == strcmp($op, "+"))return 1;
+    if(0 == strcmp($op, "-"))return 1;
+    if(0 == strcmp($op, "*"))return 2;
+    if(0 == strcmp($op, "/"))return 2;
+    if(0 == strcmp($op, "~"))return 3; // internal symbol for unary minus
+    if(0 == strcmp($op, "#"))return 3; // internal symbol for unary plus
+    if(0 == strcmp($op, "^"))return 4;
+}
+
+// Shunting Yard Algorithm invented by the one and only famous egsger dijkstra
+function shunting_yard($token_list)
+{
+
+    $errorstr = "";
+
+    $rpolish = array(); // array to store tokens in reverse polish order
+
+    $stack = new Stack(); // the stack for operands
+
+    $pos = 0;
+    while ($pos < count($token_list)) {
+        $token = $token_list[$pos];
+
+        if (isNumber($token)) array_push($rpolish, $token);
+
+        //if(isFunction($token))array_push($stack, $token);
+
+        if (isSeparator($token)) {
+
+            // pop tokens from stack till stack is (
+            $bDone = false;
+            while (!$bDone) {
+                if (!$stack->isEmpty()) {
+                    // while stack is != (, add to queue
+                    if (strcmp($stack->last(), "(") != 0) {
+                        array_push($rpolish, $stack->pop());
+                    } else $bDone = true;
+                } else {
+                    $errorstr .= "Fehler: (1) Trennzeichen (,) nicht richtig platziert oder\n (2) schließender Klammer ) geht keine öffnende Klammer ( voraus";
+                    $bDone = true;
+                }
+            }
+
+        }
+
+        if (isOperator($token)) {
+            $bDone = false;
+            while (!$bDone) {
+                if(!$stack->isEmpty()) {
+                    if(isOperator($stack->last()) &&
+                        ((isLeftAssociative($token) && precedence($token) <= precedence($stack->last())) ||
+                            (precedence($token) < precedence($stack->last())))) {
+                        array_push($rpolish, $stack->pop());
+                    } else $bDone = true;
+                } else $bDone = true;
+            }
+
+            $stack->push($token);
+
+        }
+
+        if(0 == strcmp($token, "(")) {
+            $stack->push($token);
+        }
+
+        if(0 == strcmp($token, ")")) {
+            $bDone = false;
+            while(!$bDone) {
+                if(!$stack->isEmpty()) {
+                    if(strcmp($stack->last(), "(") == 0) {
+                        $stack->pop();
+                        $bDone = true;
+                    }
+                    else {
+                        array_push($rpolish, $stack->pop());
+                    }
+                }
+                else {
+                    $bDone = true;
+                    $errorstr .= "Fehler: (1) schließender Klammer ) geht keine öffnende Klammer ( voraus\n";
+                }
+            }
+
+            //if(isFunction($stack->last()))array_push($rpolish, $stack->pop());
+        }
+
+        $pos++;
+
+    }
+
+    // pop stack to queue
+    while(!$stack->isEmpty()) {
+        if(0 == strcmp($stack->last(), "(")) {
+            $errorstr = "Fehler: es gibt mehr öffnende als schließende Klammern";
+            break;
+        }
+
+        array_push($rpolish, $stack->pop());
+    }
+
+    return $rpolish;
+}
+
+function isBinaryOp($token) {
+    return $token{0} == '+' || $token{0} == '-' || $token{0} == '*' || $token{0} == '/' || $token{0} == '^';
+}
+
+// func to evaluate a token list in rpn
+function evalRPolish($token_list) {
+    $pos = 0;
+
+    $stack = new Stack();
+
+    while($pos < count($token_list)) {
+        $token = $token_list[$pos];
+
+        if(isNumber($token))$stack->push($token);
+        if(isOperator($token)) {
+            if(isBinaryOp($token)) {
+                $op2 = $stack->pop();
+                $op1 = $stack->pop();
+                if(0 == strcmp($token, "+"))$stack->push($op1 + $op2);
+                if(0 == strcmp($token, "-"))$stack->push($op1 - $op2);
+                if(0 == strcmp($token, "*"))$stack->push($op1 * $op2);
+                if(0 == strcmp($token, "/"))$stack->push($op1 / $op2);
+                if(0 == strcmp($token, "^"))$stack->push(pow($op1, $op2));
+            } else
+            {
+                // must be unary as tertiary ops are not supported yet(same as funcs)
+                $op = $stack->pop();
+                if(0 == strcmp($token, "#"))$stack->push($op);
+                if(0 == strcmp($token, "~"))$stack->push(- $op);
+            }
+        }
+
+        $pos++;
+    }
+
+    return $stack->pop();
 }
 
 ?>
@@ -159,6 +333,7 @@ function print_list($list) {
 
 
 
+
     </script>
     <!-- local copy !-->
     <script type="text/javascript" src="./MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -168,12 +343,36 @@ function print_list($list) {
     </script>
 </head>
 <body>
+<h4>Stack test</h4>
 <?php
+    $stack = new Stack();
 
-$t_list = tokenize("(3+4)2(3*5+8/6)(7)8(9)");
+    $stack->push(3);
+    $stack->push(4);
+    $stack->push(5);
+
+    while(!$stack->isEmpty())echo $stack->pop()."|";
+
+?>
+<h4>Inputstr</h4>
+<?php
+$istr = "(3+4)2(3*5+8/6)(7)8(9)";
+//$istr = "13+4*--6/2";
+$istr = "2.09+-3.847*6.095657*-7/8+2/(4+7)";
+//$istr ="(2+3)*2/(1+1)";
+//$istr = "2/(1+1)";
+echo "Berechne: ".$istr;
+
+$t_list = tokenize($istr);
 //tokenize("2.09+-3.847*6.095657*-7/8+2/(4+7)");
 //tokenize("2+3*6*7/8+2*(4+7)");
 print_list($t_list);
+
+$rpolish = shunting_yard($t_list);
+echo "<h2>Reverse Polish Notation:</h2>";
+print_list($rpolish);
+
+echo "Ergebnis: ".evalRPolish($rpolish);
 
 ?>
 </body>
