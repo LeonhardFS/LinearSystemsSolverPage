@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData">
+  <component name="PublishConfigData" uploadOnCheckin="07d3ffd7-3000-4744-aecf-0ce16df50256">
     <serverData>
-      <paths name="WAMP">
+      <paths name="MAMP">
         <serverdata>
           <mappings>
             <mapping deploy="." local="$PROJECT_DIR$" web="/" />
@@ -10,6 +10,7 @@
         </serverdata>
       </paths>
     </serverData>
+    <option name="myUploadOnCheckinName" value="MAMP" />
   </component>
 </project>
 

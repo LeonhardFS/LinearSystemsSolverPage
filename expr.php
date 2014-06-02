@@ -312,6 +312,43 @@ function evalRPolish($token_list) {
     return $stack->pop();
 }
 
+// func to evaluate a token list in rpn using rational numbers
+function evalRPolishRational($token_list) {
+    $pos = 0;
+
+    $stack = new Stack();
+
+    while($pos < count($token_list)) {
+        $token = $token_list[$pos];
+
+        if(isNumber($token)) {
+            $r = number2Rational($token);
+            $stack->push($r);
+        }
+        if(isOperator($token)) {
+            if(isBinaryOp($token)) {
+                $op2 = $stack->pop();
+                $op1 = $stack->pop();
+                if(0 == strcmp($token, "+"))$stack->push(rplus($op1, $op2));
+                if(0 == strcmp($token, "-"))$stack->push(rminus($op1, $op2));
+                if(0 == strcmp($token, "*"))$stack->push(rtimes($op1, $op2));
+                if(0 == strcmp($token, "/"))$stack->push(rdivide($op1, $op2));
+                //if(0 == strcmp($token, "^"))$stack->push(rpow($op1, $op2));
+            } else
+            {
+                // must be unary as tertiary ops are not supported yet(same as funcs)
+                $op = $stack->pop();
+                if(0 == strcmp($token, "#"))$stack->push($op);
+                if(0 == strcmp($token, "~"))$stack->push(rminus(new RationalNumber(0), $op));
+            }
+        }
+
+        $pos++;
+    }
+
+    return $stack->pop();
+}
+
 
 // converts a string that matches the regex above to a rational number
 function number2Rational($str) {
@@ -386,7 +423,7 @@ function number2Rational($str) {
 ?>
 <h4>Inputstr</h4>
 <?php
-$istr = "(3+4)2(3*5+8/6)(7)8(9)";
+//$istr = "(3+4)2(3*5+8/6)(7)8(9)";
 //$istr = "13+4*--6/2";
 $istr = "2.09+-3.847*6.095657*-7/8+2/(4+7)";
 //$istr ="(2+3)*2/(1+1)";
@@ -401,8 +438,9 @@ print_list($t_list);
 $rpolish = shunting_yard($t_list);
 echo "<h2>Reverse Polish Notation:</h2>";
 print_list($rpolish);
-
-echo "Ergebnis: ".evalRPolish($rpolish);
+$r = evalRPolishRational($rpolish);
+$r->reduce();
+echo "Ergebnis: $".$r."$ == ".($r->numerator / $r->denominator);
 
 ?>
 </body>
