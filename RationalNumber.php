@@ -195,6 +195,20 @@ function rdivide($a, $b)
     }
 }
 
+// operator ^
+function rpow($base, $exp) {
+    assert(is_a($base, 'RationalNumber'));
+    assert(is_int($exp));
+    if($exp < 0)
+        $res = new RationalNumber(pow($base->denominator, abs($exp)), pow($base->numerator, abs($exp)));
+    else if($exp > 0)
+        $res = new RationalNumber(pow($base->numerator, $exp), pow($base->denominator, $exp));
+    else $res = new RationalNumber(1);
+
+    return $res;
+}
+
+
 function requals($a, $b)
 {
     assert(is_a($a, 'RationalNumber'));

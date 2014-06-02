@@ -39,7 +39,7 @@ function isOperatorOrParentheses($str)
 {
     $pos = 0;
     if (strlen($str) > 1) return false;
-    return $str{$pos} == '+' || $str{$pos} == '-' || $str{$pos} == '~' || $str{$pos} == '#' || $str{$pos} == '*' || $str{$pos} == '/' || $str{$pos} == '(' || $str{$pos} == ')';
+    return $str{$pos} == '+' || $str{$pos} == '-' || $str{$pos} == '~' || $str{$pos} == '#' || $str{$pos} == '*' || $str{$pos} == '/' || $str{$pos} == '^' || $str{$pos} == '(' || $str{$pos} == ')';
 }
 
 function isNumber($str)
@@ -333,7 +333,12 @@ function evalRPolishRational($token_list) {
                 if(0 == strcmp($token, "-"))$stack->push(rminus($op1, $op2));
                 if(0 == strcmp($token, "*"))$stack->push(rtimes($op1, $op2));
                 if(0 == strcmp($token, "/"))$stack->push(rdivide($op1, $op2));
-                //if(0 == strcmp($token, "^"))$stack->push(rpow($op1, $op2));
+                if(0 == strcmp($token, "^")) {
+                    $op2->reduce();
+                    if($op2->denominator == 1)
+                    $stack->push(rpow($op1, $op2->numerator));
+                    else throw new Exception('^ operator only supported for integers');
+                }
             } else
             {
                 // must be unary as tertiary ops are not supported yet(same as funcs)
@@ -428,6 +433,7 @@ function number2Rational($str) {
 $istr = "2.09+-3.847*6.095657*-7/8+2/(4+7)";
 //$istr ="(2+3)*2/(1+1)";
 //$istr = "2/(1+1)";
+$istr = "2*1/3+4^2";
 echo "Berechne: ".$istr;
 
 $t_list = tokenize($istr);
