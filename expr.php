@@ -312,6 +312,29 @@ function evalRPolish($token_list) {
     return $stack->pop();
 }
 
+
+// converts a string that matches the regex above to a rational number
+function number2Rational($str) {
+
+    $str = trim($str);
+
+    $numerator_str = "";
+    $numbersafterdot = 0;
+    for($i = 0; $i < strlen($str); $i++) {
+        // check for dot
+        if($str{$i} == '.') {
+            $numbersafterdot = strlen($str) - $i - 1;
+        } else {
+            $numerator_str .= $str{$i};
+        }
+    }
+
+    $numerator = intval($numerator_str);
+    $denominator = pow(10, $numbersafterdot);
+
+    return new RationalNumber($numerator, $denominator);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -343,6 +366,13 @@ function evalRPolish($token_list) {
     </script>
 </head>
 <body>
+<h4>Conversion of number str to rational</h4>
+<?php
+  $nstr = "-123.456";
+    $r = number2Rational($nstr);
+    $r->reduce();
+    echo $nstr." konvertiert zu $".$r."$ == ".($r->numerator / $r->denominator);
+?>
 <h4>Stack test</h4>
 <?php
     $stack = new Stack();
