@@ -187,9 +187,13 @@ function rdivide($a, $b)
 {
     assert(is_a($a, 'RationalNumber'));
     if (is_a($b, 'RationalNumber')) {
+        if($b->numerator == 0)throw new Exception('Division by zero.');
+
         $res = new RationalNumber($a->numerator * $b->denominator, $a->denominator * $b->numerator);
         return $res;
     } else {
+        if($b == 0)throw new Exception('Division by zero.');
+
         $res = new RationalNumber($a->numerator, $a->denominator * $b);
         return $res;
     }
