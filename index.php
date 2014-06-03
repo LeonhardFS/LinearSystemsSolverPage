@@ -6,6 +6,9 @@ include_once('tests.php');
 include_once('expr.php');
 
 
+// use bc package for numbers to deal with large values!
+
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
