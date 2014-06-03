@@ -313,6 +313,11 @@ parsePostRequest();
     <?php
     // solve Gauss here
 
+    // set if n > 4 size of matrices smaller
+    $fontsize = 100;
+    if($n > 4)$fontsize = 100;
+    else $fontsize = 150;
+
 
     // load test cases, if wished
     // loadTest1();
@@ -345,7 +350,7 @@ parsePostRequest();
         echo "<tr><td>";
         echo "<span style=\"width:20px\" class=\"roundDecor\">".$i."</span>";
         echo "</td><td>";
-        echo "<div style=\"font-size: 150%;width: 100%;text-align: center\">";
+        echo "<div style=\"font-size: ".$fontsize."%;width: 100%;text-align: center\">";
         echo "$" .$strMatExLast. "$";
         echo "</div>";
         echo "</td><td width=\"33%\">";
@@ -359,21 +364,21 @@ parsePostRequest();
 
     <tr>
         <td><?php echo "<span style=\"width:20px\" class=\"roundDecor\">".($i+1)."</span>"?></td>
-        <td><div style="font-size:150%;width: 100%;text-align: center">$<?php echo $strMatExCur; ?>$</div></td>
+        <td><div style="font-size:<?php echo $fontsize; ?>%;width: 100%;text-align: center">$<?php echo $strMatExCur; ?>$</div></td>
         <td><span class="roundRectDecor"><?php echo $strDescCur; ?></span></td>
     </tr>
     <?php
         // print last info if necessary
         if(strpos($strDescCur, 'Ergebnis') === false && $LS->existsSolution()) {
             echo "<tr><td><span style=\"width:20px\" class=\"roundDecor\">".($i+2)."</span></td>
-    <td><div style=\"font-size:150%;width: 100%;text-align: center\">\$".$LS->getFormattedTexCode()."\$</div></td>
+    <td><div style=\"font-size:".$fontsize."%;width: 100%;text-align: center\">\$".$LS->getFormattedTexCode()."\$</div></td>
     <td><span class=\"roundRectDecor\">Ergebnis aus Matrix ablesen</span></td></tr>";
         }
     ?>
 </table>
 <hr style="width: 90%" class="separator">
 
-<div class="solution">
+<div class="solution" style="font-size: <?php if($n > 4)echo 100; else echo 125; ?>%">
     Lösung: <?php echo "$" . "L = " . $LS->getAffineSpaceTexString() . "$";?>
 </div>
 </section>
