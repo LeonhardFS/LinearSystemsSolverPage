@@ -3,6 +3,8 @@ include_once('LinearSystem.php');
 include_once('RationalNumber.php');
 include_once('math.php');
 include_once('tests.php');
+include_once('expr.php');
+
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -34,29 +36,17 @@ function rationalToStr($r) {
 
 // returns an error string, if conversion was not successful
 function strToRational($str, &$r) {
-    // split str by / char
-    $a = explode('/', $str);
 
-    if(count($a) > 2)return "Zur Eingabe von Brüchen ist höchstens ein '/' Zeichen erlaubt";
-
-    // only numbers allowed
-    foreach($a as &$val) {
-        $val=preg_replace("/[^0-9]/","",$val);
+    if(0 == strcmp($str, "")){
+        $r = new RationalNumber(0);
+        return "";
     }
 
-    if(count($a) == 1) {
-
-
-        // simple case, only numerator
-        $r = new RationalNumber(intval($a[0]));
-    } else {
-        $r = new RationalNumber(0);
-
-        // division by zero?
-        if(intval($a[1]) == 0) {
-            return "Division durch 0 ist nicht definiert";
-        }
-        $r = new RationalNumber(intval($a[0]), intval($a[1]));
+    try {
+        $r = evalRational($str);
+    }
+    catch (Exception $e) {
+        return $e->getMessage();
     }
 
     return "";

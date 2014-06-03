@@ -152,9 +152,11 @@ function tokenize($str)
     $pos = 0;
     $length = 1;
     $match = null;
+    $foundmatch = false; // we need to use an extra variable as php treats "0"==null!
     $lasttokenisnumber = false;
     $lasttokenisoperator = true; // hack if expr starts with - it must be an unary one!
     while ($pos <= strlen($str)) {
+
         for ($j = 1; $j <= strlen($str) - $pos; $j++) {
             $curstr = substr($str, $pos, $j);
             if (isOperatorOrParentheses($curstr)) {
@@ -170,15 +172,17 @@ function tokenize($str)
                 }
 
                 $length = $j;
+                $foundmatch = true;
             }
             if (!$lasttokenisnumber && isNumber($curstr)) {
                 $match = $curstr;
                 $length = $j;
+                $foundmatch = true;
             }
         }
 
         $pos += $length;
-        if ($match) {
+        if ($foundmatch) {
             // no match, save token
             array_push($token_list, $match);
             $length = 1;
@@ -191,6 +195,7 @@ function tokenize($str)
             else $lasttokenisoperator = false;
 
             $match = null;
+            $foundmatch = false;
         }
     }
 
@@ -205,7 +210,6 @@ function tokenize($str)
 
     // solve -a^2 prob
     $token_list = solvePowProblem($token_list);
-    print_list($token_list);
 
     return $token_list;
 }
@@ -260,6 +264,9 @@ function shunting_yard($token_list)
     $pos = 0;
     while ($pos < count($token_list)) {
         $token = $token_list[$pos];
+
+        // php sucks, therefore fast hack here cause php treats "0" as null!
+        if($token == null)$token = "0";
 
         if (isNumber($token)) array_push($rpolish, $token);
 
@@ -353,6 +360,9 @@ function evalRPolish($token_list) {
 
     while($pos < count($token_list)) {
         $token = $token_list[$pos];
+
+        // php sucks, therefore fast hack here cause php treats "0" as null!
+        if($token == null)$token = "0";
 
         if(isNumber($token))$stack->push($token);
         if(isOperator($token)) {
@@ -470,6 +480,9 @@ function evalRational($str) {
 
 ?>
 
+
+<!-- uncomment to get test data !-->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -501,7 +514,11 @@ function evalRational($str) {
 <body>
 <h4>Alles in einem getestet</h4>
 <?php
-//$istr = "(3+4)2(3*5+8/6)(7)8(9)";
+
+    // test if "0" is number
+    echo "is 0 a number?: ".isNumber('0');
+
+$istr = "(3+4)2(3*5+8/6)(7)8(9)";
 //$istr = "13+4*--6/2";
 $istr = "2.09+-3.847*6.095657*-7/8+2/(4+7)";
 //$istr ="(2+3)*2/(1+1)";
@@ -512,7 +529,10 @@ $istr = "2*1/3+4^2";
 $istr = "2^-2^2";
 $istr = "2^-2^2 + 2 - 2^-2^2^2";
 $istr = "-2^2+3";
+$istr = "0";
     echo "Ergebnis: ".$istr." = ".evalRational($istr);
+
+
 ?>
 <h4>Conversion of number str to rational</h4>
 <?php
