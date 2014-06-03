@@ -125,7 +125,18 @@ function parsePostRequest() {
 <head>
     <!-- allow unicode characters in file -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Ax=b</title>
+
+    <meta name="author" content="L.Spiegelberg">
+    <meta name="publisher" content="L. Spiegelberg">
+    <meta name="copyright" content="L. Spiegelberg">
+    <meta name="description" content="Ein Onlinelöser für lineare Gleichungssysteme basierend auf dem Gaußalgorithmus, der neben eindeutigen oder unendliche viele Lösungen in der Ausgabe unterstützt.">
+    <meta name="keywords" content="lineares, Gleichungssystem, Ax=b, Matrix, Vektor, Gauss, Gaussalgorithmus, Zeilenstufenform, Lineare, Algebra, ">
+    <meta name="page-topic" content="Bildung">
+    <meta http-equiv="content-language" content="de">
+    <meta name="robots" content="index, follow">
+
+
+    <title>Gaußlöser für lineare Gleichungssysteme Ax=b</title>
     <style type="text/css">
         @import url("style.css");
     </style>
@@ -241,7 +252,7 @@ if(!isset($_POST['a_11']))
 parsePostRequest();
 
 ?>
-<p>Um Brüche $\frac{x}{y}$ einzugeben, tippe in die Felder einfach x / y. Aktuell werden leider nur rationale Zahlen unterstützt.</p>
+<p>Um das lineare Gleichungssystem $Ax=b$ mit $A \in \mathbb{R}^{n \times n}$, $x,b \in \mathbb{R}^n$ zu lösen, gib einfach die Zahlen oder einen mathematischen Term (z.B. 2^2 + 3/7), der keine Variablen beinhaltet, in die enstprechenden Felder ein. </p>
 
 <p></p>
 <form name="les" method="post" action="<?php echo $_SERVER['PHP_SELF']?>">
