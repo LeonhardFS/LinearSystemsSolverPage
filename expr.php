@@ -91,6 +91,7 @@ function insertMultOps($token_list)
 
 
 // solve the -a^2 problem via a hack
+// basically convert - if necessary to unary minus and add meaning parentheses
 function solvePowProblem($token_list) {
     // simply disallow negative number before ^
     $out_list = array();
@@ -99,7 +100,6 @@ function solvePowProblem($token_list) {
     $powseries = false;
     $pcount = 0; // count of parentheses used
     while ($pos < count($token_list)) {
-        //if(0 == strcmp($token_list[$pos], "^"))$powseries = true;
 
         if(isOperator($token_list[$pos]) &&
             0 != strcmp($token_list[$pos], "^") &&
@@ -118,9 +118,8 @@ function solvePowProblem($token_list) {
                 // add an unary minus following the tokens
                 $token = $token_list[$pos];
                 $token = substr($token, strpos($token, "-") + 1);
-                echo "adding ".$token;
                 array_push($out_list, "(");
-                $pcount++;
+                $pcount++; // for every opening bracket, there must be also a closing one
                 array_push($out_list, "~");
                 array_push($out_list, $token);
                 $powseries = true;
@@ -512,6 +511,7 @@ $istr = "2*1/3+4^2";
     $istr = "-10^2/3";
 $istr = "2^-2^2";
 $istr = "2^-2^2 + 2 - 2^-2^2^2";
+$istr = "-2^2+3";
     echo "Ergebnis: ".$istr." = ".evalRational($istr);
 ?>
 <h4>Conversion of number str to rational</h4>
