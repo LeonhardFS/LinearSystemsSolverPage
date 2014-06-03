@@ -47,6 +47,11 @@ function isNumber($str)
     return regmatch($str, "#[-+]?([0-9]*\.[0-9]+|[0-9]+)#");
 }
 
+function isNegativeNumber($str)
+{
+    return regmatch($str, "#-([0-9]*\.[0-9]+|[0-9]+)#");
+}
+
 function regmatch($str, $pattern)
 {
     $matches = array();
@@ -83,6 +88,63 @@ function insertMultOps($token_list)
     return $out_list;
 }
 
+
+
+// solve the -a^2 problem via a hack
+function solvePowProblem($token_list) {
+    // simply disallow negative number before ^
+    $out_list = array();
+
+    $pos = 0;
+    $powseries = false;
+    $pcount = 0; // count of parentheses used
+    while ($pos < count($token_list)) {
+        //if(0 == strcmp($token_list[$pos], "^"))$powseries = true;
+
+        if(isOperator($token_list[$pos]) &&
+            0 != strcmp($token_list[$pos], "^") &&
+            0 != strcmp($token_list[$pos], "-") &&
+            0 != strcmp($token_list[$pos], "~")) {
+            // add closing )
+            for($i = 0; $i < $pcount; $i++) {
+                array_push($out_list,")");
+            }
+            $pcount = 0;
+            $powseries=false;
+        }
+
+        if($pos + 1 < count($token_list)) {
+            if(isNegativeNumber($token_list[$pos]) && 0 == strcmp($token_list[$pos + 1], "^") && !$powseries) {
+                // add an unary minus following the tokens
+                $token = $token_list[$pos];
+                $token = substr($token, strpos($token, "-") + 1);
+                echo "adding ".$token;
+                array_push($out_list, "(");
+                $pcount++;
+                array_push($out_list, "~");
+                array_push($out_list, $token);
+                $powseries = true;
+            }
+        else {
+            array_push($out_list, $token_list[$pos]);
+        }
+        }
+        else array_push($out_list, $token_list[$pos]);
+
+
+
+        $pos++;
+    }
+
+    // add closing )
+    for($i = 0; $i < $pcount; $i++) {
+        array_push($out_list,")");
+    }
+
+    return $out_list;
+
+}
+
 // returns array of tokens in str format
 function tokenize($str)
 {
@@ -92,7 +154,7 @@ function tokenize($str)
     $length = 1;
     $match = null;
     $lasttokenisnumber = false;
-    $lasttokenisoperator = false;
+    $lasttokenisoperator = true; // hack if expr starts with - it must be an unary one!
     while ($pos <= strlen($str)) {
         for ($j = 1; $j <= strlen($str) - $pos; $j++) {
             $curstr = substr($str, $pos, $j);
@@ -142,6 +204,10 @@ function tokenize($str)
     // insert * ops where necessary
     $token_list = insertMultOps($token_list);
 
+    // solve -a^2 prob
+    $token_list = solvePowProblem($token_list);
+    print_list($token_list);
+
     return $token_list;
 }
 
@@ -166,7 +232,9 @@ function isLeftAssociative($op) {
     if(0 == strcmp($op, "-"))return true;
     if(0 == strcmp($op, "*"))return true;
     if(0 == strcmp($op, "/"))return true;
-    if(0 == strcmp($op, "^"))return false;
+    if(0 == strcmp($op, "^"))return false; // right associative
+    if(0 == strcmp($op, "~"))return false; // right associative (unary -)
+    if(0 == strcmp($op, "#"))return false; // right associative (unary +)
     return false;
 }
 
@@ -377,6 +445,30 @@ function number2Rational($str) {
     return new RationalNumber($numerator, $denominator);
 }
 
+// func to evaluate string to rational number
+function evalRational($str) {
+
+    $str = trim($str);
+
+    // first replace brackets (, [, {
+    $brackets = array("[", "{");
+    $str = str_replace($brackets, "(", $str);
+    $brackets = array("]", "}");
+    $str = str_replace($brackets, ")", $str);
+
+    // first check if only allowed signs are used
+    // not the negation at the beginning of the group
+    if(regmatch($str, "/[^0-9\+\-\*\/\^,; \.\(\)]+/"))throw new Exception('there are only numbers, +-*/^.,;() allowed!');
+
+    // get tokens
+    $token_list = tokenize($str);
+
+    // convert to reverse polish notation
+    $token_list = shunting_yard($token_list);
+
+    return evalRPolishRational($token_list);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -408,6 +500,20 @@ function number2Rational($str) {
     </script>
 </head>
 <body>
+<h4>Alles in einem getestet</h4>
+<?php
+//$istr = "(3+4)2(3*5+8/6)(7)8(9)";
+//$istr = "13+4*--6/2";
+$istr = "2.09+-3.847*6.095657*-7/8+2/(4+7)";
+//$istr ="(2+3)*2/(1+1)";
+//$istr = "2/(1+1)";
+$istr = "2*1/3+4^2";
+    $istr = "2(3+4+5+6+7+8+9)-10^2/3";
+    $istr = "-10^2/3";
+$istr = "2^-2^2";
+$istr = "2^-2^2 + 2 - 2^-2^2^2";
+    echo "Ergebnis: ".$istr." = ".evalRational($istr);
+?>
 <h4>Conversion of number str to rational</h4>
 <?php
   $nstr = "-123.456";
@@ -428,12 +534,6 @@ function number2Rational($str) {
 ?>
 <h4>Inputstr</h4>
 <?php
-//$istr = "(3+4)2(3*5+8/6)(7)8(9)";
-//$istr = "13+4*--6/2";
-$istr = "2.09+-3.847*6.095657*-7/8+2/(4+7)";
-//$istr ="(2+3)*2/(1+1)";
-//$istr = "2/(1+1)";
-$istr = "2*1/3+4^2";
 echo "Berechne: ".$istr;
 
 $t_list = tokenize($istr);
