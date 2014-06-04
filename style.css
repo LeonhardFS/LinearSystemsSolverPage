@@ -274,3 +274,33 @@ margin-bottom: 20px}
     box-shadow: 0px 0px 8px 0px #47aaca;
     background-color: #d3e9eb;
 }
+
+
+/* for nav bar, language settings */
+div#langSel a.langDE {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background-image: url('./img/Germany_set.png');
+    background-size:32px 64px;
+    background-position: 0px 32px;
+    text-indent: -99999px;
+    margin: 2px;
+}
+div#langSel a.langEN {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background-image: url('./img/United-States_set.png');
+    background-size:32px 64px;
+    background-position: 0px 32px;
+    text-indent: -99999px;
+    margin: 2px;
+
+}
+div#langSel a.active {
+    background-position: 0 0;
+}
+div#langSel a:hover {
+    background-position: 0 0;
+}

@@ -4,10 +4,16 @@ include_once('RationalNumber.php');
 include_once('math.php');
 include_once('tests.php');
 include_once('expr.php');
+include_once('lang.php');
 
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
+
+// set language if necessary
+if(!isset($_GET['lang']))setLang('en');
+else setLang($_GET['lang']);
 
 $inputcontainserrors = false;
 
@@ -99,7 +105,7 @@ function parsePostRequest()
     $n = $index - 1;
 
     $errfound = false;
-    $errstr = "<div class=\"errSpace\"><h4>Fehler:</h4><hr><ul>";
+    $errstr = "<div class=\"errSpace\"><h4>".tt_s('error').":</h4><hr><ul>";
 
     for ($i = 1; $i <= $n; $i++)
         for ($j = 1; $j <= $n; $j++) {
@@ -148,7 +154,7 @@ function parsePostRequest()
     <meta name="robots" content="index, follow">
 
 
-    <title>Gaußlöser für lineare Gleichungssysteme Ax=b</title>
+    <title><?php tt('bartitle'); ?></title>
     <style type="text/css">
         @import url("style.css");
     </style>
@@ -171,9 +177,46 @@ function parsePostRequest()
     </script>
 
 
+
+    <?php
+        // following lines configure the active state via jQuery
+        if(0 == strcmp(getLang(), 'de')){
+
+    ?>
+        <script>
+            function setLangState() {
+                $("#langSel a.langDE").addClass("active");
+            }
+        </script>
+    <?php
+        } else if(0 == strcmp(getLang(), 'en')) {
+    ?>
+            <script>
+                function setLangState() {
+                    $("#langSel a.langEN").addClass("active");
+                }
+            </script>
+    <?php
+        // end active state config
+        }
+    ?>
+
     <!-- all jQuery code for this doc goes here !-->
     <script>
         $(document).ready(function () {
+
+            // use for manipulation of language
+            setLangState();
+
+            $('#langSel a').hover(function() {
+                $('#langSel a').removeClass("active");
+                $(this).addClass("active");
+            }, function() {
+                $('#langSel a').removeClass("active");
+                setLangState();
+            });
+
+            // here is the matrix code
 
             var maxRows = 9;
 
@@ -249,10 +292,20 @@ function parsePostRequest()
     <div class="centerit">
         <p>
 
-            <span style="font-size: 34px">Gauß-Löser</span>
+            <span style="font-size: 34px"><?php tt('title'); ?></span>
             <br>
-            <span style="font-size: 20px">zur Lösung eines linearen Gleichungssystems $Ax=b$<span></p></div>
+            <span style="font-size: 20px"><?php tt('subtitle'); ?><span></p>
+    </div>
 </header>
+
+<nav>
+    <div style="margin: 10; height: 0px; float: right; padding-right: 20px;" id="langSel">
+<!--        <img src="img/United-States_set.png" style="margin: 2px;" width="32px">-->
+<!--        <img src="img/Germany_set.png" width="32px" style="margin: 2px;">-->
+        <a href="index.php?lang=en" class="langEN">en</a>
+        <a href="index.php?lang=de" class="langDE">de</a>
+    </div>
+</nav>
 
 <section id="main">
     <?php
@@ -264,9 +317,8 @@ function parsePostRequest()
     parsePostRequest();
 
     ?>
-    <p>Um das lineare Gleichungssystem $Ax=b$ mit $A \in \mathbb{R}^{n \times n}$, $x,b \in \mathbb{R}^n$ zu lösen, gib
-        einfach die Zahlen oder einen mathematischen Term (z.B. 2^2 + 3/7), der keine Variablen beinhaltet, in die
-        enstprechenden Felder ein. </p>
+
+    <p><?php tt('description'); ?></p>
 
     <p></p>
 
@@ -314,7 +366,7 @@ function parsePostRequest()
             </tr>
             <tr>
                 <td colspan="5" style="text-align: center">
-                    <input type="submit" value="Lösen" class="buttonDecor" name="submit" style="margin-right: 40px">
+                    <input type="submit" value="<?php tt('submit'); ?>" class="buttonDecor" name="submit" style="margin-right: 40px">
                     <input type="button" name="addDim" value="+" class="roundButton">
                     <input type="button" name="remDim" value="-" class="roundButton">
                 </td>
@@ -401,7 +453,7 @@ function parsePostRequest()
             if (strpos($strDescCur, 'Ergebnis') === false && $LS->existsSolution()) {
                 echo "<tr><td><span style=\"width:20px\" class=\"roundDecor\">" . ($i + 2) . "</span></td>
     <td><div style=\"font-size:" . $fontsize . "%;width: 100%;text-align: center\">\$" . $LS->getFormattedTexCode() . "\$</div></td>
-    <td><span class=\"roundRectDecor\">Ergebnis aus Matrix ablesen</span></td></tr>";
+    <td><span class=\"roundRectDecor\">".tt_s('get_result')."</span></td></tr>";
             }
         }
         ?>
@@ -409,12 +461,12 @@ function parsePostRequest()
     <hr style="width: 90%" class="separator">
 
     <div class="solution" style="font-size: <?php if ($n > 4) echo 100; else echo 125; ?>%">
-        Lösung: <?php
+        <?php echo tt_s('solution').": ";
         if (!$inputcontainserrors) {
 
             echo "$" . "L = " . $LS->getAffineSpaceTexString() . "$";
         } else {
-            echo "Bitte korrigiere oben erst deine Eingaben.";
+            tt('correct_input');
         }
         ?>
     </div>
