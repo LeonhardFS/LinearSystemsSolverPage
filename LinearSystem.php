@@ -387,11 +387,12 @@ class LinearSystem
                     // set R
                     $this->R[$this->lCurIndex][$this->c] = new RationalNumber(1);
 
-                    if ($this->lCurIndex - 1 < $this->maxVarNames)
+                    if ($this->lCurIndex - 1 < $this->maxVarNames) {
                         if (langDE())
                             $str = "Nullzeile, führe neue Variable $" . $this->varNames[$this->lCurIndex - 1] . " \\in \\mathbb{R}$ ein";
                         else
                             $str = "zero row, introduce new variable $" . $this->varNames[$this->lCurIndex - 1] . " \\in \\mathbb{R}$";
+                    }
                     else $str = "error";
 
                     $this->lCurIndex++;
@@ -402,6 +403,7 @@ class LinearSystem
                         $str = "Widerspruch in Zeile $\\text{" . toRoman($this->c + 1) . "}$, es gibt keine Lösung";
                     else
                         $str = "contradiction in row $\\text{" . toRoman($this->c + 1) . "}$, there is no solution";
+
                     $this->finished = true;
                     $this->existsSolution = false;
                 }
@@ -413,17 +415,19 @@ class LinearSystem
                 if ($this->r == $this->c) {
                     if ($this->A[$this->r][$this->c]->numerator == $this->A[$this->r][$this->c]->denominator)
                         // finished?
-                        if ($this->c == 0)
+                        if ($this->c == 0) {
                             if (langDE())
                                 $str = "Ergebnis aus Matrix ablesen";
                             else
                                 $str = "take result from matrix";
-                        else
+                        }
+                        else {
                             if (langDE())
                                 $str = "nichts zu tun, nächste Zeile";
                             else
 
                                 $str = "nothing to do, go to next row";
+                        }
 
                     else {
                         if (langDE())
