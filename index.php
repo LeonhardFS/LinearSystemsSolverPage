@@ -322,7 +322,7 @@ function parsePostRequest()
 
     <p></p>
 
-    <form name="les" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+    <form name="les" method="post" action="<?php echo $_SERVER['PHP_SELF']."?lang=".getLang(); ?>">
         <table style="margin-left: auto;margin-right: auto">
             <tr>
                 <td>
