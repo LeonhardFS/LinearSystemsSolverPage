@@ -116,6 +116,9 @@ class LinearSystem
     private $maxVarNames; // number of var names
     private $existsSolution; // empty set?
 
+    private $pivotcol;  // pivot element's col
+    private $pivotrow;  // pivot element's row
+
     // constants for modes
     private $mode;
     const MODE_FIRST = 1;
@@ -280,6 +283,9 @@ class LinearSystem
         // first mode is reducing Matrix to row column form
         // second mode is substituion, precisely solving an upper triangular matrix
         if ($this->mode == LinearSystem::MODE_FIRST) {
+            $this->pivotcol = $this->c;
+            $this->pivotrow = $this->r + 1;
+
             // zero at current upper row?
             if (requals($this->A[$this->c][$this->c], new RationalNumber(0))) {
                 // swap rows
@@ -291,9 +297,9 @@ class LinearSystem
                         $found = true;
 
                         if (langDE())
-                            $str .= "tausche Zeile $\\text{" . toRoman($this->c + 1) . "}$ mit Zeile $\\text{" . toRoman($k + 1)."}$";
+                            $str .= "tausche Zeile $\\text{" . toRoman($this->c + 1) . "}$ mit Zeile $\\text{" . toRoman($k + 1) . "}$";
                         else
-                            $str .= "swap rows $\\text{" . toRoman($this->c + 1) . "}$ and $\\text{" . toRoman($k + 1)."}$";
+                            $str .= "swap rows $\\text{" . toRoman($this->c + 1) . "}$ and $\\text{" . toRoman($k + 1) . "}$";
 
                         $this->swapRows($k, $this->c);
 
@@ -392,8 +398,7 @@ class LinearSystem
                             $str = "Nullzeile, führe neue Variable $" . $this->varNames[$this->lCurIndex - 1] . " \\in \\mathbb{R}$ ein";
                         else
                             $str = "zero row, introduce new variable $" . $this->varNames[$this->lCurIndex - 1] . " \\in \\mathbb{R}$";
-                    }
-                    else $str = "error";
+                    } else $str = "error";
 
                     $this->lCurIndex++;
                 } else {
@@ -420,8 +425,7 @@ class LinearSystem
                                 $str = "Ergebnis aus Matrix ablesen";
                             else
                                 $str = "take result from matrix";
-                        }
-                        else {
+                        } else {
                             if (langDE())
                                 $str = "nichts zu tun, nächste Zeile";
                             else
@@ -487,7 +491,7 @@ class LinearSystem
     }
 
     // prints out tex code for the extended matrix
-    public function getFormattedTexCode()
+    public function getFormattedTexCode($pivot1_row = -1, $pivot1_col = -1)
     {
         $str = "";
         $str .= "\\left( \\begin{array}{";
@@ -499,7 +503,14 @@ class LinearSystem
                 // reduce first
                 $this->A[$j][$i]->reduce();
 
-                $str .= $this->A[$j][$i];
+                // if both $pivot1_row & col are >= 0 < n bold on pos!
+                if ($pivot1_row >= 0 && $pivot1_row < $this->n && $pivot1_col >= 0 && $pivot1_col < $this->n
+                && $pivot1_row == $i && $pivot1_col == $j)
+                    $str .= "\\boldsymbol{" . $this->A[$j][$i] . "}";
+                else
+                    $str .= $this->A[$j][$i];
+
+
                 $str .= " & ";
                 if ($j == $this->n - 1) {
 
@@ -594,6 +605,19 @@ class LinearSystem
         }
 
         return $str;
+    }
+
+    // returns column of pivot element
+    function getPivotCol() {
+        // overwork here...
+        return $this->pivotcol;
+        return $this->c;
+    }
+    // returns row of pivot element
+    function getPivotRow() {
+        // overwork here...
+        return $this->pivotrow;
+        return $this->r;
     }
 // end class
 }

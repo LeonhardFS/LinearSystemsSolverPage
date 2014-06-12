@@ -201,6 +201,47 @@ function parsePostRequest()
         }
     ?>
 
+    <!-- on submit of form
+    -->
+    <script>
+        function serializeForm(form) {
+
+            var str = "";
+            // construct "get" url from form
+            var matRows = $('#inMatA tr');
+            var n = matRows.length;
+
+            var serializedMatrix = "[";
+            // first serialize values of A matrix
+            for(var i = 1; i <= n; i++) {
+                serializedMatrix += "[";
+                for(var j = 1; j <= n; j++) {
+                    var a = $("input[name='a_"+ i.toString()+j.toString()+"']").val();
+
+                    if(j < n) serializedMatrix += a.toString() + ",";
+                    else serializedMatrix += a.toString();
+                }
+                serializedMatrix += "]";
+                if(i < n)serializedMatrix += ",";
+            }
+            serializedMatrix += "]";
+
+            var serializedB = "[";
+            // next serialize b
+            for (var j = 1; j <= n; j++) {
+                var b = $("input[name='b_" + j.toString() + "']").val();
+
+                if (j < n) serializedB += b.toString() + ",";
+                else serializedB += b.toString();
+            }
+            serializedB += "]";
+
+            // change here
+            form.action = form.action + "&A=" + serializedMatrix + "&b=" + serializedB;
+            //form.action = form.action + "&A=[[1,1,1],[2,3,4],[5,6,7]]&b=[1,2,3]";
+            return true;
+        }
+    </script>
     <!-- all jQuery code for this doc goes here !-->
     <script>
         $(document).ready(function () {
@@ -322,7 +363,7 @@ function parsePostRequest()
 
     <p></p>
 
-    <form name="les" method="post" action="<?php echo $_SERVER['PHP_SELF']."?lang=".getLang(); ?>">
+    <form name="les" method="post" action="<?php echo $_SERVER['PHP_SELF']."?lang=".getLang(); ?>" onsubmit="return serializeForm(this);">
         <table style="margin-left: auto;margin-right: auto">
             <tr>
                 <td>
@@ -421,7 +462,7 @@ function parsePostRequest()
                 // step
                 $strMatExLast = $strMatExCur;
                 $strDescLast = $strDescCur;
-                $strMatExCur = $LS->getFormattedTexCode();
+                $strMatExCur = $LS->getFormattedTexCode($LS->getPivotRow(), $LS->getPivotCol());
                 $strDescCur = $LS->gaussStep();
 
                 echo "<tr><td>";
