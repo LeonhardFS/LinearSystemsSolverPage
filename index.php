@@ -10,6 +10,13 @@ include_once('lang.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+$strA = "";
+$strb = "";
+if(isset($_GET['A']))$strA = $_GET['A'];
+if(isset($_GET['b']))$strb = $_GET['b'];
+
+
+parseAB($strA, $strb);
 
 // set language if necessary
 if(!isset($_GET['lang']))setLang('en');
@@ -21,6 +28,116 @@ $formsend = false;
 // has the page been exercised via a form action?
 if (isset($_POST['submit'])) {
     $formsend = true;
+}
+
+function parseAB($strA, $strb) {
+    global $n;
+
+    //asserts...
+    if(strlen($strA) < 2)return false;
+    if(strlen($strb) < 2)return false;
+
+    //A
+    if($strA{0} != '[')return false;
+    if($strA{strlen($strA)-1} != ']')return false;
+    //b
+    if($strb{0} != '[')return false;
+    if($strb{strlen($strb)-1} != ']')return false;
+
+
+    // first check out n
+    $pos = 1;
+    $maxsep = 0; // max number of , separators
+    $sepcounter = 0; // separator counter
+    $maxopar = 0; // max number of opening brackets
+    $maxcpar = 0; // max number of opening brackets
+
+    //A
+    while($pos < strlen($strA) - 1) {
+        if($strA{$pos} == '[') {
+            $maxsep = max($maxsep, $sepcounter);
+            $sepcounter = 0;
+            $maxopar++;
+        }
+        if($strA{$pos} == ']'){
+            $maxsep = max($maxsep, $sepcounter);
+            $sepcounter = 0;
+            $maxcpar++;
+        }
+
+        if($strA{$pos} == ',')$sepcounter++;
+        $pos++;
+    }
+
+    //b
+    $pos = 1;
+    $sepcounter = 0;
+    while($pos < strlen($strb) - 1) {
+        if($strb{$pos} == ',')$sepcounter++;
+        $pos++;
+    }
+    $maxsep = max($maxsep, $sepcounter);
+
+    // now determine n
+    $n = min(max(min($maxcpar, $maxopar), $maxsep + 1), 9); // no more than 9 allowed!
+
+    // now set first all post elements to 0
+    for($i = 1; $i <= $n; $i++)
+        for($j = 1; $j <= $n; $j++) {
+            $str = 'a_' . $i . $j;
+            $_POST[$str] = new RationalNumber(0);
+            $str = 'b_'.$j;
+            $_POST[$str] = new RationalNumber(0);
+
+        }
+
+    // now parse in A
+    $pos = 1;
+    $i = 1;
+    $j = 1;
+    $curstr = "";
+    while($pos < strlen($strA)) {
+        if($strA{$pos} == ']') {
+            $_POST['a_'.$i.$j] = $curstr;
+            $i++;
+        }
+        else if($strA{$pos} == '[') {
+            $curstr = "";
+            $j = 1;
+        }
+        else if($strA{$pos} == ',') {
+
+            $_POST['a_'.$i.$j] = $curstr;
+            $curstr = "";
+            $j++;
+        }
+        else {
+            $curstr .= $strA{$pos};
+        }
+    $pos++;
+    }
+
+    // parse b
+    $pos = 1;
+    $i = 1;
+    $curstr = "";
+    while($pos < strlen($strb)) {
+        if($strb{$pos} == ']') {
+            $_POST['b_'.$i] = $curstr;
+        }
+        else if($strb{$pos} == ',') {
+
+            $_POST['b_'.$i] = $curstr;
+            $curstr = "";
+            $i++;
+        }
+        else {
+            $curstr .= $strb{$pos};
+        }
+        $pos++;
+    }
+
+    return true;
 }
 
 function getNumberOf($name)
@@ -204,8 +321,8 @@ function parsePostRequest()
     <!-- on submit of form
     -->
     <script>
-        function serializeForm(form) {
 
+        function getSerializedData() {
             var str = "";
             // construct "get" url from form
             var matRows = $('#inMatA tr');
@@ -236,11 +353,20 @@ function parsePostRequest()
             }
             serializedB += "]";
 
+            return "&A=" + serializedMatrix + "&b=" + serializedB;
+        }
+
+
+        function serializeForm(form) {
             // change here
-            form.action = form.action + "&A=" + serializedMatrix + "&b=" + serializedB;
-            //form.action = form.action + "&A=[[1,1,1],[2,3,4],[5,6,7]]&b=[1,2,3]";
+            form.action = form.action + getSerializedData();
             return true;
         }
+
+        function serializeHref(href) {
+            href.href = href.href + getSerializedData();
+        }
+
     </script>
     <!-- all jQuery code for this doc goes here !-->
     <script>
@@ -343,8 +469,8 @@ function parsePostRequest()
     <div style="margin: 10; height: 0px; float: right; padding-right: 20px;" id="langSel">
 <!--        <img src="img/United-States_set.png" style="margin: 2px;" width="32px">-->
 <!--        <img src="img/Germany_set.png" width="32px" style="margin: 2px;">-->
-        <a href="index.php?lang=en" class="langEN">en</a>
-        <a href="index.php?lang=de" class="langDE">de</a>
+        <a href="index.php?lang=en" class="langEN" onclick="serializeHref(this);">en</a>
+        <a href="index.php?lang=de" class="langDE" onclick="serializeHref(this);">de</a>
     </div>
 </nav>
 
