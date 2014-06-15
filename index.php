@@ -627,7 +627,7 @@ function parsePostRequest()
     </table>
     <hr style="width: 90%" class="separator">
 
-    <div class="solution" style="font-size: <?php if ($n > 4) echo 100; else echo 125; ?>%">
+    <div class="solution" style="font-size: <?php if ($n > 4) echo 100; else echo 125; ?>%; width: 60%;">
         <?php echo tt_s('solution').": ";
         if (!$inputcontainserrors) {
 

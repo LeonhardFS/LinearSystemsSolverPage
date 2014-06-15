@@ -601,7 +601,8 @@ class LinearSystem
 
         // handle special case R^n
         if ($this->lCurIndex == $this->n + 1) {
-            $str .= " = \\mathbb{R}^" . $this->n;
+            $str .= " = \\mathbb{R}";
+            if($this->n != 1)$str .= "^" . $this->n;
         }
 
         return $str;
