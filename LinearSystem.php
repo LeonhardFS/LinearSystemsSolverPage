@@ -177,6 +177,10 @@ class LinearSystem
 
         // set existsSolution to true(default mode)
         $this->existsSolution = true;
+
+        // init pivot indices
+        $this->pivotcol = 0;
+        $this->pivotrow = 1;
     }
 
     function solveWithGauss()
@@ -283,8 +287,6 @@ class LinearSystem
         // first mode is reducing Matrix to row column form
         // second mode is substituion, precisely solving an upper triangular matrix
         if ($this->mode == LinearSystem::MODE_FIRST) {
-            $this->pivotcol = $this->c;
-            $this->pivotrow = $this->r + 1;
 
             // zero at current upper row?
             if (requals($this->A[$this->c][$this->c], new RationalNumber(0))) {
@@ -377,6 +379,12 @@ class LinearSystem
                 $this->c = $this->n - 1;
                 $this->r = $this->n - 1;
             }
+
+
+            // return pivot elements
+            $this->pivotcol = $this->c;
+            $this->pivotrow = $this->r;
+
         } else if ($this->mode == LinearSystem::MODE_SECOND) {
 
             // solve here upper triangular matrix!
@@ -384,8 +392,8 @@ class LinearSystem
             // is element A_cc 0?
             if ($this->A[$this->c][$this->c]->numerator == 0) {
 
-                // is b also 0?
-                if ($this->b[$this->c]->numerator == 0) {
+                // is b also 0? (remember R's first column equals b
+                if ($this->R[0][$this->c]->numerator == 0) {
                     // now introduce new variable and set entry in matrix A to 0
                     // don't forget to set in the next zero column corresponding line to 1!
                     $this->A[$this->c][$this->c] = new RationalNumber(1);
@@ -449,6 +457,10 @@ class LinearSystem
                     }
                     // set to one(no complicated calculations)
                     $this->A[$this->r][$this->c] = new RationalNumber(1);
+
+                    $this->pivotcol = $this->c;
+                    $this->pivotrow = $this->r - 1;
+
                 } else {
                     // text output, for 1 * something shorten! 0 * something has also to be dealt with!
                     // ATTENTION!
@@ -469,6 +481,9 @@ class LinearSystem
                     }
                     // set to zero(no complicated calculations)
                     $this->A[$this->r][$this->c] = new RationalNumber(0);
+
+                    $this->pivotcol = $this->c;
+                    $this->pivotrow = $this->r;
                 }
             }
 
@@ -484,6 +499,9 @@ class LinearSystem
 
             // negative ?
             if ($this->c == -1) $this->finished = true;
+
+
+
         } else {
             $str = "unknown mode, complete failure!";
         }
