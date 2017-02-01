@@ -592,7 +592,7 @@ function parsePostRequest()
                 $strMatExLast = $strMatExCur;
                 $strDescLast = $strDescCur;
                 $strMatExCur = $LS->getFormattedTexCode($LS->getPivotRow(), $LS->getPivotCol());
-                $strDescCur = $LS->gaussStep()."pivotrow: ".$LS->getPivotRow()."pivotcol: ".$LS->getPivotCol();
+                $strDescCur = $LS->gaussStep();//."pivotrow: ".$LS->getPivotRow()."pivotcol: ".$LS->getPivotCol();
 
                 echo "<tr><td>";
                 echo "<span style=\"width:20px\" class=\"roundDecor\">" . $i . "</span>";

@@ -433,6 +433,9 @@ class LinearSystem
                                 $str = "Ergebnis aus Matrix ablesen";
                             else
                                 $str = "take result from matrix";
+				
+				// immediately leave loop
+				return $str;
                         } else {
                             if (langDE())
                                 $str = "nichts zu tun, nächste Zeile";
@@ -524,7 +527,8 @@ class LinearSystem
                 // if both $pivot1_row & col are >= 0 < n bold on pos!
                 if ($pivot1_row >= 0 && $pivot1_row < $this->n && $pivot1_col >= 0 && $pivot1_col < $this->n
                 && $pivot1_row == $i && $pivot1_col == $j)
-                    $str .= "\\boldsymbol{" . $this->A[$j][$i] . "}";
+                    //$str .= "\\boldsymbol{" . $this->A[$j][$i] . "}";
+                    $str .= "" . $this->A[$j][$i] . "";
                 else
                     $str .= $this->A[$j][$i];
 
