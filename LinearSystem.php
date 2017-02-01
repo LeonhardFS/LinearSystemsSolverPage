@@ -1,6 +1,7 @@
 <?php
 // inc rationalnumber
 include_once('./RationalNumber.php');
+include_once('lang.php');
 
 // function to multiply vector by matrix
 function transformVector($A, $x, $n)
@@ -115,6 +116,9 @@ class LinearSystem
     private $maxVarNames; // number of var names
     private $existsSolution; // empty set?
 
+    private $pivotcol;  // pivot element's col
+    private $pivotrow;  // pivot element's row
+
     // constants for modes
     private $mode;
     const MODE_FIRST = 1;
@@ -173,6 +177,10 @@ class LinearSystem
 
         // set existsSolution to true(default mode)
         $this->existsSolution = true;
+
+        // init pivot indices
+        $this->pivotcol = 0;
+        $this->pivotrow = 1;
     }
 
     function solveWithGauss()
@@ -205,7 +213,8 @@ class LinearSystem
         return $this->finished;
     }
 
-    public  function existsSolution() {
+    public function existsSolution()
+    {
         return $this->existsSolution;
     }
 
@@ -268,7 +277,7 @@ class LinearSystem
         $str = "";
 
         // fix for 1x1 matrix
-        if($this->n == 1) {
+        if ($this->n == 1) {
             $this->mode = LinearSystem::MODE_SECOND;
             $this->r = 0;
             $this->c = 0;
@@ -278,6 +287,7 @@ class LinearSystem
         // first mode is reducing Matrix to row column form
         // second mode is substituion, precisely solving an upper triangular matrix
         if ($this->mode == LinearSystem::MODE_FIRST) {
+
             // zero at current upper row?
             if (requals($this->A[$this->c][$this->c], new RationalNumber(0))) {
                 // swap rows
@@ -288,7 +298,10 @@ class LinearSystem
                         // swap
                         $found = true;
 
-                        $str .= "tausche Zeile " . toRoman($this->c + 1) . " mit Zeile " . toRoman($k + 1);
+                        if (langDE())
+                            $str .= "tausche Zeile $\\text{" . toRoman($this->c + 1) . "}$ mit Zeile $\\text{" . toRoman($k + 1) . "}$";
+                        else
+                            $str .= "swap rows $\\text{" . toRoman($this->c + 1) . "}$ and $\\text{" . toRoman($k + 1) . "}$";
 
                         $this->swapRows($k, $this->c);
 
@@ -297,7 +310,10 @@ class LinearSystem
 
                 if ($found <> true) {
                     // test linear independece!
-                    $str .= "Spalte $\\text{" . toRoman($this->c + 1) . "}$ besteht nur aus Nulleinträgen, gehe zur nächsten Spalte";
+                    if (langDE())
+                        $str .= "Spalte $\\text{" . toRoman($this->c + 1) . "}$ besteht nur aus Nulleinträgen, gehe zur nächsten Spalte";
+                    else
+                        $str .= "There are only zeros in column $\\text{" . toRoman($this->c + 1) . "}$, go to next column";
                     $this->c++;
                     $this->r = $this->c + 1;
                 }
@@ -309,18 +325,33 @@ class LinearSystem
 
                 // substract rows if not equal to 0
                 if (requals($this->A[$this->c][$this->r], new RationalNumber(0)) == true) {
-                    $str .= " nichts zu tun, ";
+                    if (langDE())
+                        $str .= " nichts zu tun, ";
+                    else
+                        $str .= " nothing to do, ";
                     if ($this->r + 1 >= $this->n - 1) {
                         if ($this->c + 1 == $this->n - 1)
-                            $str .= "Zeilenstufenform erreicht";
+                            if (langDE())
+                                $str .= "Zeilenstufenform erreicht";
+                            else
+                                $str .= "reached row echelon form";
                         else
-                            $str .= "gehe zur nächsten Spalte";
+                            if (langDE())
+                                $str .= "gehe zur nächsten Spalte";
+                            else
+                                $str .= "go to next column";
                     } else {
-                        $str .= "gehe zur nächsten Zeile";
+                        if (langDE())
+                            $str .= "gehe zur nächsten Zeile";
+                        else
+                            $str .= "go to next row";
                     }
                 } else {
                     //substract rows
-                    $str = "rechne ";
+                    if (langDE())
+                        $str = "rechne ";
+                    else
+                        $str = "let ";
                     $tmp = $this->gaussRows($this->r, $this->c, $this->c);
                     $str .= "$" . $tmp . "$";
                 }
@@ -348,6 +379,12 @@ class LinearSystem
                 $this->c = $this->n - 1;
                 $this->r = $this->n - 1;
             }
+
+
+            // return pivot elements
+            $this->pivotcol = $this->c;
+            $this->pivotrow = $this->r;
+
         } else if ($this->mode == LinearSystem::MODE_SECOND) {
 
             // solve here upper triangular matrix!
@@ -355,8 +392,8 @@ class LinearSystem
             // is element A_cc 0?
             if ($this->A[$this->c][$this->c]->numerator == 0) {
 
-                // is b also 0?
-                if($this->b[$this->c]->numerator == 0) {
+                // is b also 0? (remember R's first column equals b
+                if ($this->R[0][$this->c]->numerator == 0) {
                     // now introduce new variable and set entry in matrix A to 0
                     // don't forget to set in the next zero column corresponding line to 1!
                     $this->A[$this->c][$this->c] = new RationalNumber(1);
@@ -364,16 +401,22 @@ class LinearSystem
                     // set R
                     $this->R[$this->lCurIndex][$this->c] = new RationalNumber(1);
 
-                    if ($this->lCurIndex - 1 < $this->maxVarNames)
-                        $str = "Nullzeile, führe neue Variable $" . $this->varNames[$this->lCurIndex - 1] . " \\in \\mathbb{R}$ ein";
-                    else $str = "error";
+                    if ($this->lCurIndex - 1 < $this->maxVarNames) {
+                        if (langDE())
+                            $str = "Nullzeile, führe neue Variable $" . $this->varNames[$this->lCurIndex - 1] . " \\in \\mathbb{R}$ ein";
+                        else
+                            $str = "zero row, introduce new variable $" . $this->varNames[$this->lCurIndex - 1] . " \\in \\mathbb{R}$";
+                    } else $str = "error";
 
                     $this->lCurIndex++;
-                }
-                else {
+                } else {
                     // there's a contradiction => 1 = 0
                     // => no solution
-                    $str = "Widerspruch in Zeile $\\text{".toRoman($this->c + 1)."}$, es gibt keine Lösung";
+                    if (langDE())
+                        $str = "Widerspruch in Zeile $\\text{" . toRoman($this->c + 1) . "}$, es gibt keine Lösung";
+                    else
+                        $str = "contradiction in row $\\text{" . toRoman($this->c + 1) . "}$, there is no solution";
+
                     $this->finished = true;
                     $this->existsSolution = false;
                 }
@@ -385,12 +428,24 @@ class LinearSystem
                 if ($this->r == $this->c) {
                     if ($this->A[$this->r][$this->c]->numerator == $this->A[$this->r][$this->c]->denominator)
                         // finished?
-                        if ($this->c == 0)
-                            $str = "Ergebnis aus Matrix ablesen";
-                        else
-                            $str = "nichts zu tun, nächste Zeile";
+                        if ($this->c == 0) {
+                            if (langDE())
+                                $str = "Ergebnis aus Matrix ablesen";
+                            else
+                                $str = "take result from matrix";
+                        } else {
+                            if (langDE())
+                                $str = "nichts zu tun, nächste Zeile";
+                            else
+
+                                $str = "nothing to do, go to next row";
+                        }
+
                     else {
-                        $str = "kürzen, rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "}  : " . $this->A[$this->r][$this->c]->toTexWithBrackets() . "$";
+                        if (langDE())
+                            $str = "kürzen, rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "}  : " . $this->A[$this->r][$this->c]->toTexWithBrackets() . "$";
+                        else
+                            $str = "reduce row by $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "}  : " . $this->A[$this->r][$this->c]->toTexWithBrackets() . "$";
 
                         // go through R
                         for ($i = 0; $i <= $this->n - 1; $i++) { // fix for 1x1 matrix!
@@ -402,20 +457,33 @@ class LinearSystem
                     }
                     // set to one(no complicated calculations)
                     $this->A[$this->r][$this->c] = new RationalNumber(1);
+
+                    $this->pivotcol = $this->c;
+                    $this->pivotrow = $this->r - 1;
+
                 } else {
                     // text output, for 1 * something shorten! 0 * something has also to be dealt with!
                     // ATTENTION!
-                    if ($this->A[$this->r][$this->c]->numerator == $this->A[$this->r][$this->c]->denominator)
-                        $str = "rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "} - \\text{" . toRoman($this->r + 1) . "}$";
-                    else
-                        $str = "rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "} -" . $this->A[$this->r][$this->c]->toTexWithBrackets(). "\\cdot \\text{" . toRoman($this->r + 1) . "}$";
-
+                    if ($this->A[$this->r][$this->c]->numerator == $this->A[$this->r][$this->c]->denominator) {
+                        if (langDE())
+                            $str = "rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "} - \\text{" . toRoman($this->r + 1) . "}$";
+                        else
+                            $str = "let $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "} - \\text{" . toRoman($this->r + 1) . "}$";
+                    } else {
+                        if (langDE())
+                            $str = "rechne $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "} -" . $this->A[$this->r][$this->c]->toTexWithBrackets() . "\\cdot \\text{" . toRoman($this->r + 1) . "}$";
+                        else
+                            $str = "let $\\tilde{\\text{" . toRoman($this->c + 1) . "}} = \\text{" . toRoman($this->c + 1) . "} -" . $this->A[$this->r][$this->c]->toTexWithBrackets() . "\\cdot \\text{" . toRoman($this->r + 1) . "}$";
+                    }
                     // go through R
                     for ($i = 0; $i < $this->n - 1; $i++) {
                         $this->R[$i][$this->c] = rminus($this->R[$i][$this->c], rtimes($this->A[$this->r][$this->c], $this->R[$i][$this->r]));
                     }
                     // set to zero(no complicated calculations)
                     $this->A[$this->r][$this->c] = new RationalNumber(0);
+
+                    $this->pivotcol = $this->c;
+                    $this->pivotrow = $this->r;
                 }
             }
 
@@ -431,6 +499,9 @@ class LinearSystem
 
             // negative ?
             if ($this->c == -1) $this->finished = true;
+
+
+
         } else {
             $str = "unknown mode, complete failure!";
         }
@@ -438,7 +509,7 @@ class LinearSystem
     }
 
     // prints out tex code for the extended matrix
-    public function getFormattedTexCode()
+    public function getFormattedTexCode($pivot1_row = -1, $pivot1_col = -1)
     {
         $str = "";
         $str .= "\\left( \\begin{array}{";
@@ -450,7 +521,14 @@ class LinearSystem
                 // reduce first
                 $this->A[$j][$i]->reduce();
 
-                $str .= $this->A[$j][$i];
+                // if both $pivot1_row & col are >= 0 < n bold on pos!
+                if ($pivot1_row >= 0 && $pivot1_row < $this->n && $pivot1_col >= 0 && $pivot1_col < $this->n
+                && $pivot1_row == $i && $pivot1_col == $j)
+                    $str .= "\\boldsymbol{" . $this->A[$j][$i] . "}";
+                else
+                    $str .= $this->A[$j][$i];
+
+
                 $str .= " & ";
                 if ($j == $this->n - 1) {
 
@@ -500,7 +578,7 @@ class LinearSystem
         $str = "";
 
         // special case, solution is empty set
-        if(!$this->existsSolution())
+        if (!$this->existsSolution())
             return "\\emptyset";
 
         // go through solution array R
@@ -541,10 +619,24 @@ class LinearSystem
 
         // handle special case R^n
         if ($this->lCurIndex == $this->n + 1) {
-            $str .= " = \\mathbb{R}^" . $this->n;
+            $str .= " = \\mathbb{R}";
+            if($this->n != 1)$str .= "^" . $this->n;
         }
 
         return $str;
+    }
+
+    // returns column of pivot element
+    function getPivotCol() {
+        // overwork here...
+        return $this->pivotcol;
+        return $this->c;
+    }
+    // returns row of pivot element
+    function getPivotRow() {
+        // overwork here...
+        return $this->pivotrow;
+        return $this->r;
     }
 // end class
 }
